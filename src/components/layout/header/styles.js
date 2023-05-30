@@ -47,6 +47,7 @@ export const Nav = styled.nav`
   color: #000;
   font-size: 18px;
   font-family: var(--font-family-main);
+  justify-content: space-between;
   ${responsive.smAndLess} {
     display: none;
     position: absolute;

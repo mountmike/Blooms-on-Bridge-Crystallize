@@ -17,7 +17,7 @@ export default function Footer() {
       <Link href="/">
         <a aria-label="Logo">
           <Logo>
-            <img src="/static/shop-logo.svg" alt="" width="56" height="84" />
+            <img src="/static/logo.png" alt="" width="56" height="84" />
           </Logo>
         </a>
       </Link>
@@ -31,12 +31,11 @@ export default function Footer() {
           </li>
         ))}
       </NavList>
-      <Powered>
-        <p>{t('ecomBy')}</p>
-        <a href="https://crystallize.com" aria-label="crystallize.com">
-          <LogoCrystallize size={10} />
-        </a>
-      </Powered>
+      <footer>
+        <p>&copy; Blooms on Bridge {new Date().getFullYear()}</p>
+        <p>15 Bridge Street Benalla Victoria 3672 Australia</p>
+        <p>Call: 03 5762 5588</p>
+      </footer>
     </Outer>
   );
 }
