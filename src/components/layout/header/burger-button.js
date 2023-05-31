@@ -7,7 +7,7 @@ const Outer = styled.button.attrs(() => ({
   type: 'button'
 }))`
   /* appearance: none; */
-  /* display: none; */
+  display: none; 
   cursor: pointer;
   background: transparent;
   width: 35px;

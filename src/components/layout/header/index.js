@@ -40,7 +40,7 @@ export default function Header({ simple, preview }) {
       <Outer simple={simple}>
         <Link href="/" passHref>
           <Logo aria-label="Logo">
-            <img src="/static/logo.png" alt="" width="150" />
+            <img src="/static/logo_textonly.png" alt="" width="150" />
           </Logo>
         </Link>
         <Nav open={navOpen}>

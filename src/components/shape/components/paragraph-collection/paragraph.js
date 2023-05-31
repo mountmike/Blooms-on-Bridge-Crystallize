@@ -1,7 +1,7 @@
 import ContentTransformer from 'ui/content-transformer';
 import { H3 } from 'ui';
 
-import { Outer, Title, Body, Text, Media } from './styles';
+import { Outer, Title, Body, Text, Media, Temp } from './styles';
 import Images from '../images';
 import Videos from '../videos';
 
@@ -14,6 +14,7 @@ const Paragraph = ({
 }) => {
   const hasText = !!body?.json?.length;
   const hasMedia = !!images || !!videos;
+ 
 
   return (
     <Outer $media={hasMedia} $text={hasText}>
