@@ -10,6 +10,7 @@
  *    - [blog-post].js
  *  - chairs
  *    - [chair].js
+ * *
  */
 
 import React from 'react';
