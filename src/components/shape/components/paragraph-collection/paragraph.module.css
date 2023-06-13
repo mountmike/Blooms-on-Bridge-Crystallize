@@ -26,12 +26,40 @@
 
 .overlayH2 {
     font-size: 3rem;
-    font-weight: 400;
     margin: 0;
 }
 
 .overlayH3 {
-    font-size: 1rem;
+    font-size: 1.2rem;
+    margin-left: 5px;
+    margin-top: 5px;
+    margin-bottom: 10px;
     font-weight: 100;
+}
+
+.button {
+    background-color: rgba(255, 255, 255, 0.728);
+    color: rgb(0, 0, 0);
+    font-weight: 700;
+    border-radius: 2px;
+    height: 2rem;
+    width: 40%;
+    margin: 0;
+}
+
+.button:hover {
+    background-color: white;
+
+}
+
+@media only screen and (max-width: 600px) {
+    .overlayH3 {
+        margin-left: 0;
+        font-size: 1rem;
+    }
+
+    .overlayH2 {
+        font-size: 2rem;
+    }
 }
 

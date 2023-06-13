@@ -1,6 +1,6 @@
 import ContentTransformer from 'ui/content-transformer';
 import { H3 } from 'ui';
-import styles from './styles.module.css'
+import styles from './paragraph.module.css'
 import Image from 'next/image'
 
 import { Outer, Title, Body, Text, Media, Temp, TitleOverlay } from './styles';
@@ -30,13 +30,14 @@ const Paragraph = ({
                 src="/static/logo_white.png"
                 width={150}
                 height={150}
-                alt="Picture of the author"
+                alt="Blooms on Bridge logo"
               />
             </div>
           
             <div className={styles.textContainer}>
               <h2 className={styles.overlayH2}>{title.text}</h2>
               <h3 className={styles.overlayH3}>{body.json[0].children[0].textContent}</h3>
+              <button className={styles.button}>Shop by occasion</button>
             </div>
             </div>
         </header>
