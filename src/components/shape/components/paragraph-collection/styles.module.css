@@ -1,0 +1,37 @@
+.container {
+    position: relative;
+}
+
+.overlayContainer {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: space-between;
+    width: 100%;
+    height: 20rem;
+    position: absolute;
+    mask: linear-gradient(black, rgba(0, 0, 0, 0.815), transparent);
+    backdrop-filter: blur(40px);
+}
+
+.textContainer {
+    display: flex;
+    flex-direction: column;
+    color: white;
+    padding: 2%;
+}
+
+.imgContainer {
+    padding: 0 2%;
+}
+
+.overlayH2 {
+    font-size: 3rem;
+    font-weight: 400;
+    margin: 0;
+}
+
+.overlayH3 {
+    font-size: 1rem;
+    font-weight: 100;
+}
+

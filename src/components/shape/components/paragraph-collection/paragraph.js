@@ -1,7 +1,9 @@
 import ContentTransformer from 'ui/content-transformer';
 import { H3 } from 'ui';
+import styles from './styles.module.css'
+import Image from 'next/image'
 
-import { Outer, Title, Body, Text, Media, Temp } from './styles';
+import { Outer, Title, Body, Text, Media, Temp, TitleOverlay } from './styles';
 import Images from '../images';
 import Videos from '../videos';
 
@@ -14,29 +16,55 @@ const Paragraph = ({
 }) => {
   const hasText = !!body?.json?.length;
   const hasMedia = !!images || !!videos;
- 
+  const isHomePage = title.text === "WHATEVER THE OCCASION"
+
+  console.log(body);
 
   return (
     <Outer $media={hasMedia} $text={hasText}>
+      { isHomePage ? 
+        <header className={styles.container}>
+          <div className={styles.overlayContainer}>
+            <div className={styles.imgContainer}>
+              <Image
+                src="/static/logo_white.png"
+                width={150}
+                height={150}
+                alt="Picture of the author"
+              />
+            </div>
+          
+            <div className={styles.textContainer}>
+              <h2 className={styles.overlayH2}>{title.text}</h2>
+              <h3 className={styles.overlayH3}>{body.json[0].children[0].textContent}</h3>
+            </div>
+            </div>
+        </header>
+      :
       <Text>
         {!!title && title.text && (
           <Title>
             <HeadingComponent>{title.text}</HeadingComponent>
           </Title>
+          
         )}
+
         {hasText && (
           <Body>
             <ContentTransformer json={body.json} />
           </Body>
         )}
       </Text>
+}
       {hasMedia && (
         <Media>
           <Images images={images} />
           <Videos videos={videos} />
         </Media>
       )}
+  
     </Outer>
+  
   );
 };
 

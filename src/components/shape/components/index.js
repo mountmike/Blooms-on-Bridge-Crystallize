@@ -46,7 +46,7 @@ const ShapeComponents = ({ components = [], overrides }) => {
             Component = Component || ParagraphCollection;
 
             return (
-              <Component key={key} paragraphs={component.content.paragraphs} />
+              <Component key={key} paragraphs={component.content.paragraphs} /> 
             );
           }
 
@@ -116,6 +116,7 @@ const ShapeComponents = ({ components = [], overrides }) => {
 
           return <span key={key} />;
         })}
+
     </div>
   );
 };

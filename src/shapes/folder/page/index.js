@@ -53,6 +53,7 @@ export default function FolderPage({ folder, hideHeader }) {
       )}
 
       {body?.length > 0 && <ShapeComponents components={body} />}
+      {console.log(body)}
 
       {hasGridRelation &&
         gridRelations.map((grid, index) => (
