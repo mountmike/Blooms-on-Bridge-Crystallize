@@ -16,7 +16,7 @@ const Paragraph = ({
 }) => {
   const hasText = !!body?.json?.length;
   const hasMedia = !!images || !!videos;
-  const isHomePage = title.text === "WHATEVER THE OCCASION"
+  const isHomePage = title.text === "Blooms on Bridge, Benalla"
 
   console.log(body);
 
@@ -37,7 +37,7 @@ const Paragraph = ({
             <div className={styles.textContainer}>
               <h2 className={styles.overlayH2}>{title.text}</h2>
               <h3 className={styles.overlayH3}>{body.json[0].children[0].textContent}</h3>
-              <button className={styles.button}>Shop by occasion</button>
+              {/* <button className={styles.button}>Shop by occasion</button> */}
             </div>
             </div>
         </header>

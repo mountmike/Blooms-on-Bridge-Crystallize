@@ -57,13 +57,17 @@ export default function FolderPage({ folder, hideHeader }) {
 
       {hasGridRelation &&
         gridRelations.map((grid, index) => (
-          <Grid
-            key={index}
-            model={grid}
-            cellComponent={({ cell }) => (
-              <GridItem data={cell.item} gridCell={cell} />
-            )}
-          />
+          <section>
+            <br  />
+            <h1>{grid.name}</h1>
+            <Grid
+              key={index}
+              model={grid}
+              cellComponent={({ cell }) => (
+                <GridItem data={cell.item} gridCell={cell} />
+              )}
+            />
+          </section>
         ))}
 
       <Stackable stacks={stacks} />

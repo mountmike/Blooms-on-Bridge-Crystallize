@@ -34,5 +34,8 @@ export default function Grid({ model, ...rest }) {
     return null;
   }
 
+
   return <StyledGrid model={model} {...rest} />;
+
+    
 }
