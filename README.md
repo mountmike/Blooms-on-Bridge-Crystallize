@@ -1,12 +1,14 @@
 # Crystallize NextJS Boilerplate
 
-----
+---
 
-This repository is what we call a "subtree split": a read-only copy of one directory of the main repository. 
+This repository is what we call a "subtree split": a read-only copy of one
+directory of the main repository.
 
-If you want to report or contribute, you should do it on the main repository: https://github.com/CrystallizeAPI/boilerplates
+If you want to report or contribute, you should do it on the main repository:
+https://github.com/CrystallizeAPI/boilerplates
 
-----
+---
 
 [![Crystallize Community Slack][21]][22] [![React: latest][0]][1]
 [![Next: latest][2]][3] [![code style: prettier][4]][5]
@@ -19,7 +21,7 @@ service [Crystallize][10]. **Clone, run it up and sell!**
 _⚠️ We also have some other [open-source ecommerce storefronts][11] that could
 be of your interest._
 
-## See a LIVE demo
+## See a LIVE demoo
 
 Enjoy our [demo furniture site][24].
 
