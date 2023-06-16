@@ -1,7 +1,10 @@
 import styled from 'styled-components';
 import { responsive, Outer as O } from 'ui';
 
-export const H1 = styled.h1``;
+export const H1 = styled.h1`
+  font-size: 1.5rem;
+
+`;
 export const Outer = styled(O)`
   min-height: initial;
   ${responsive.mdPlus} {

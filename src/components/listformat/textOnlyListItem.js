@@ -3,7 +3,6 @@ import ProductShapeItem from 'shapes/product/item';
 import FolderShapeItem from 'shapes/folder/item';
 
 export default function ItemListformat({ item }) {
-  console.log(item);
   if (!item) {
     return null;
   }
@@ -15,7 +14,7 @@ export default function ItemListformat({ item }) {
   const types = {
     product: <ProductShapeItem data={item} {...commonProps} />,
     folder: <FolderShapeItem data={item} {...commonProps} />,
-    document: <DocumentShapeItem data={item} {...commonProps} />,
+    document: <DocumentShapeItem data={item} {...commonProps} />
   };
 
   return types[item.type] || null;

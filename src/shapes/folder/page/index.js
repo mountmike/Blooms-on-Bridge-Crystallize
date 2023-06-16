@@ -2,7 +2,7 @@ import React from 'react';
 
 import Grid, { GridItem } from 'components/grid';
 import Listformat from 'components/listformat';
-import { Outer, List, SubNavigation, Item } from './styles';
+import { Outer, List, SubNavigation, Item, H1 } from './styles';
 import Stackable from 'components/stackable';
 import PageHeader from 'components/page-header';
 import ShapeComponents from 'components/shape/components';
@@ -53,13 +53,14 @@ export default function FolderPage({ folder, hideHeader }) {
       )}
 
       {body?.length > 0 && <ShapeComponents components={body} />}
-      {console.log(body)}
+
 
       {hasGridRelation &&
         gridRelations.map((grid, index) => (
           <section>
-            <br  />
-            <h1>{grid.name}</h1>
+    
+            <H1>{grid.name}</H1>
+            
             <Grid
               key={index}
               model={grid}

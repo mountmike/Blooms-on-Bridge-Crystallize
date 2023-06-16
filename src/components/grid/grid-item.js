@@ -10,10 +10,31 @@ const Cell = styled.div`
   grid-row-end: span ${(p) => p.rowspan};
 `;
 
+const TextCell = styled.div`
+  height: 10%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  grid-column-end: span ${(p) => p.colspan};
+  grid-row-end: span ${(p) => p.rowspan};
+`;
+
 export default function GridItem({ data, gridCell }) {
+  const hasImage = gridCell.item.defaultVariant ? true : false
+
   return (
-    <Cell {...gridCell?.layout}>
-      <Listformat item={data} />
-    </Cell>
+    <>
+     { hasImage ?
+      <Cell {...gridCell?.layout} >
+        <Listformat item={data} />
+      </Cell>
+      :
+      <TextCell {...gridCell?.layout} >
+        <Listformat item={data} />
+      </TextCell>
+      }
+    </>
+   
   );
 }

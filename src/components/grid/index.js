@@ -5,9 +5,11 @@ import { responsive } from 'ui';
 
 export { default as GridItem } from './grid-item';
 
+
 const StyledGrid = styled(GridRenderer)`
   grid-template-rows: ${(p) =>
     `repeat(${p.model.rows?.length}, var(--grid-row-height))`};
+    margin-bottom: 2rem;
 
   ${responsive.xs} {
     // We force the grid to have 1 column for small screens (display items vertically)
@@ -29,13 +31,49 @@ const StyledGrid = styled(GridRenderer)`
   }
 `;
 
+
+const StyledGridNoImage = styled(GridRenderer)`
+  grid-template-rows: ${(p) =>
+    `repeat(${p.model.rows?.length})`};
+    margin-bottom: 2rem;
+
+  ${responsive.xs} {
+    // We force the grid to have 1 column for small screens (display items vertically)
+    // and overwrite the layout customized from the PIM dashboard.
+    // The usage of the "!important" keyword is needed to overwrite the inline
+    // styles added in the Crystallize "grid-renderer" component at render-level.
+    // Link to the component: https://github.com/CrystallizeAPI/grid-renderer
+    // Link to the implementation: https://github.com/CrystallizeAPI/grid-renderer/blob/master/src/react/css-grid.js#L18
+    grid-template-columns: 1fr !important;
+    grid-template-rows: unset !important;
+
+
+    // We also force some styles to each cell (inmediate child) because they add inline styles too
+    // Link to the implementation: https://github.com/CrystallizeAPI/grid-renderer/blob/master/src/react/css-grid.js#L31
+    > * {
+      grid-column: initial !important;
+      grid-row: initial !important;
+    }
+  }
+`;
+
 export default function Grid({ model, ...rest }) {
   if (!model) {
     return null;
   }
 
+  const hasImage = model.defaultVariant ? true : false
 
-  return <StyledGrid model={model} {...rest} />;
+
+  return (
+    <>
+    { hasImage ?
+      <StyledGrid model={model} {...rest} />
+    :
+      <StyledGridNoImage model={model} {...rest} />
+    }
+    </>
+  ) 
 
     
 }

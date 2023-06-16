@@ -18,8 +18,6 @@ const Paragraph = ({
   const hasMedia = !!images || !!videos;
   const isHomePage = title.text === "Blooms on Bridge, Benalla"
 
-  console.log(body);
-
   return (
     <Outer $media={hasMedia} $text={hasText}>
       { isHomePage ? 
