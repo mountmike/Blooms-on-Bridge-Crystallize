@@ -31,11 +31,11 @@ export default function Footer() {
           </li>
         ))}
       </NavList>
-      <footer>
+      <Powered>
         <p>&copy; Blooms on Bridge {new Date().getFullYear()}</p>
         <p>15 Bridge Street Benalla Victoria 3672 Australia</p>
         <p>Call: 03 5762 5588</p>
-      </footer>
+      </Powered>
     </Outer>
   );
 }

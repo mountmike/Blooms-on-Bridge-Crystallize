@@ -21,6 +21,7 @@ export default function FolderPage({ folder, preview, hidePageHeader }) {
     ?.json;
   const icon = components?.find((c) => c.name === 'Icon');
 
+
   return (
     <Layout
       title={title}

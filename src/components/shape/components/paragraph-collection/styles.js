@@ -39,5 +39,5 @@ export const Text = styled.div`
 `;
 export const Media = styled.div`
   grid-area: media;
-  margin-bottom: 100px;
+  margin-bottom: 50px;
 `;

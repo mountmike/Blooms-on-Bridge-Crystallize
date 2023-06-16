@@ -29,13 +29,12 @@ export const SubNavigation = styled.div`
   display: flex;
   flex-wrap: wrap;
   padding-bottom: 50px;
-  margin-bottom: 100px;
+  margin-bottom: 50px;
   ${responsive.xs} {
+    flex-direction: column;
     flex-wrap: nowrap;
     overflow: scroll;
-    padding-left: 25px;
-    padding-top: 5px;
-    padding-bottom: 10px;
+    margin-bottom: 0;
     position: relative;
   }
 `;

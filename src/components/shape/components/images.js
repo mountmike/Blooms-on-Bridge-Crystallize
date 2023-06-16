@@ -36,7 +36,7 @@ const ImgContainer = styled.div`
 const List = styled.div`
   display: flex;
   flex-wrap: wrap;
-  margin-bottom: 100px;
+  margin-bottom: 50px;
 
   > picture {
     min-height: 300px;
@@ -60,6 +60,7 @@ export default function Images({ images }) {
   if (!images || images.length === 0) {
     return null;
   }
+
 
   if (images.length === 1) {
     return (

@@ -6,6 +6,7 @@ import Image from 'next/image'
 import { Outer, Title, Body, Text, Media, Temp, TitleOverlay } from './styles';
 import Images from '../images';
 import Videos from '../videos';
+import { useEffect, useState } from 'react';
 
 const Paragraph = ({
   body,
@@ -14,9 +15,31 @@ const Paragraph = ({
   videos,
   headingComponent: HeadingComponent = H3
 }) => {
+
+  const [currentHeroImg, setCurrentHeroImg] = useState(null)
   const hasText = !!body?.json?.length;
   const hasMedia = !!images || !!videos;
   const isHomePage = title.text === "Blooms on Bridge, Benalla"
+
+  useEffect(() => {
+    if (hasMedia) {
+      setCurrentHeroImg(images[0].url)
+
+      let index = 0
+      
+      setInterval(() => {
+        if (index < images.length - 1) {
+          index++
+          setCurrentHeroImg(images[index].url)
+        } else {
+          index = 0
+          setCurrentHeroImg(images[index].url)
+        }
+      }, 15000)
+    } 
+  }, [])
+
+
 
   return (
     <Outer $media={hasMedia} $text={hasText}>
@@ -37,7 +60,7 @@ const Paragraph = ({
               <h3 className={styles.overlayH3}>{body.json[0].children[0].textContent}</h3>
               {/* <button className={styles.button}>Shop by occasion</button> */}
             </div>
-            </div>
+          </div>
         </header>
       :
       <Text>
@@ -54,13 +77,25 @@ const Paragraph = ({
           </Body>
         )}
       </Text>
-}
-      {hasMedia && (
-        <Media>
-          <Images images={images} />
-          <Videos videos={videos} />
-        </Media>
-      )}
+      }
+
+      { hasMedia && 
+        <>
+          { isHomePage ? 
+            <Media>
+              <img
+                src={currentHeroImg}
+                width="100%"
+              ></img>
+            </Media>
+          :
+            <Media>
+              <Images images={images} />
+              <Videos videos={videos} />
+            </Media>
+          }
+        </>
+      }
   
     </Outer>
   
