@@ -24,6 +24,7 @@ const Description = styled.div`
 export default function GridCollection({ title, description, grids }) {
   return (
     <Outer>
+      
       {!!title && <Title as="h4">{title}</Title>}
       {!!description && (
         <Description>

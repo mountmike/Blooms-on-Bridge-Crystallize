@@ -39,7 +39,7 @@ export default function Layout({
 }) {
   const router = useRouter();
   const headTilte = title
-    ? `${title} | ${process.env.NEXT_PUBLIC_CRYSTALLIZE_TENANT_IDENTIFIER}`
+    ? `${title} | Blooms on Bridge`
     : `${process.env.NEXT_PUBLIC_CRYSTALLIZE_TENANT_IDENTIFIER}`;
 
   //@TODO add url to .env

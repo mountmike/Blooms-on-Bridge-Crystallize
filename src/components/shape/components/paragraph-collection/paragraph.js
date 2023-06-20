@@ -15,8 +15,6 @@ const Paragraph = ({
   videos,
   headingComponent: HeadingComponent = H3
 }) => {
-
-  console.log(videos);
   const [currentHeroImg, setCurrentHeroImg] = useState(null)
   const hasText = !!body?.json?.length;
   const hasMedia = !!images || !!videos;
@@ -44,6 +42,7 @@ const Paragraph = ({
 
   return (
     <Outer $media={hasMedia} $text={hasText}>
+ 
       { isHomePage ? 
         <header className={styles.container}>
           <div className={styles.overlayContainer}>

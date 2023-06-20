@@ -22,6 +22,7 @@ export default function ProductItem({ data }) {
   const image = variant?.images?.[0] || variant?.image;
   const pricing = getRelativePriceVariants({ variant, locale });
 
+
   return (
     <Link href={path} passHref>
       <Outer type={type}>

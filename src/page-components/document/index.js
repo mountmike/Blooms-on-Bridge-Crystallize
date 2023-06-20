@@ -24,6 +24,7 @@ export default function DocumentPage({ document, preview }) {
       image={images?.content?.images?.[0]?.url}
       preview={preview}
     >
+      
       <DocumentShape document={document} asPath={asPath} />
     </Layout>
   );

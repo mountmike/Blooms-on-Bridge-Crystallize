@@ -12,7 +12,9 @@ import { getFolderTitle } from '../utils';
 
 export { getData, getFolderTitle };
 
+
 export default function FolderPage({ folder, hideHeader }) {
+
   if (!folder) {
     return <FolderNotFound />;
   }
@@ -32,6 +34,7 @@ export default function FolderPage({ folder, hideHeader }) {
   const subFolders = children?.filter(isFolderType);
   const hasSubfolders = Boolean(subFolders?.length);
   const hasGridRelation = gridRelations?.length > 0;
+
 
   return (
     <Outer>
@@ -53,7 +56,6 @@ export default function FolderPage({ folder, hideHeader }) {
       )}
 
       {body?.length > 0 && <ShapeComponents components={body} />}
-
 
       {hasGridRelation &&
         gridRelations.map((grid, index) => (

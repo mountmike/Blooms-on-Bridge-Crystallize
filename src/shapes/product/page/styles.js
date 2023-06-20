@@ -156,3 +156,7 @@ export const RelatedContainer = styled(I)`
   margin-top: 100px;
   min-height: 0;
 `;
+
+export const ProductSubNav = styled.div` 
+  margin: 1%;
+`;

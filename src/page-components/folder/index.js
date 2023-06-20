@@ -30,6 +30,7 @@ export default function FolderPage({ folder, preview, hidePageHeader }) {
       preview={preview}
     >
       <FolderShape folder={folder} hideHeader={hidePageHeader} />
+
     </Layout>
   );
 }
