@@ -1,9 +1,12 @@
 import { createGlobalStyle } from 'styled-components';
 
 export default createGlobalStyle`
+@import url('https://fonts.googleapis.com/css2?family=Alex+Brush&display=swap');
+
   :root {
     /* Typography */
     --font-family-main: "Trebuchet MS", sans-serif;
+    --font-family-serif: 'Alex Brush', cursive;
 
     --font-size-xxl: 40px;
     --font-size-xl: 32px;

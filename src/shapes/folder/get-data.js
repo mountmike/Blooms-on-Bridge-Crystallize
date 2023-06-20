@@ -11,5 +11,6 @@ export async function getData({ asPath, language, preview = null }) {
     }
   });
 
+
   return { ...data, preview };
 }

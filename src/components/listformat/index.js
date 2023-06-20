@@ -3,7 +3,6 @@ import ProductShapeItem from 'shapes/product/item';
 import FolderShapeItem from 'shapes/folder/item';
 
 export default function ItemListformat({ item }) {
-  console.log(item);
   if (!item) {
     return null;
   }

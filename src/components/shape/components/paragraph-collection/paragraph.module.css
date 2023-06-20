@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Alex+Brush&display=swap');
+
 .container {
     position: relative;
 }
@@ -18,6 +20,7 @@
     flex-direction: column;
     color: white;
     padding: 2%;
+    position: relative;
 }
 
 .imgContainer {
@@ -25,16 +28,19 @@
 }
 
 .overlayH2 {
-    font-size: 3rem;
+    font-family: 'Alex Brush';
+    font-size: 4.1rem;
+    font-weight: 400;
     margin: 0;
 }
 
 .overlayH3 {
     font-size: 1.2rem;
     margin-left: 5px;
-    margin-top: 5px;
+    margin-top: 0px;
     margin-bottom: 10px;
     font-weight: 100;
+    mask-position: top;
 }
 
 .button {
@@ -52,14 +58,27 @@
 
 }
 
-@media only screen and (max-width: 600px) {
+@media only screen and (max-width: 800px) {
     .overlayH3 {
-        margin-left: 0;
+        margin: 0;
         font-size: 1rem;
     }
 
     .overlayH2 {
+        font-size: 2.5rem;
+        margin: 0;
+    }
+}
+
+@media only screen and (max-width: 600px) {
+    .overlayH3 {
+        margin: 0;
+        font-size: .8rem;
+    }
+
+    .overlayH2 {
         font-size: 2rem;
+        margin: 0;
     }
 }
 

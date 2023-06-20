@@ -16,6 +16,7 @@ const Paragraph = ({
   headingComponent: HeadingComponent = H3
 }) => {
 
+  console.log(videos);
   const [currentHeroImg, setCurrentHeroImg] = useState(null)
   const hasText = !!body?.json?.length;
   const hasMedia = !!images || !!videos;
@@ -83,10 +84,12 @@ const Paragraph = ({
         <>
           { isHomePage ? 
             <Media>
-              <img
+              {/* <img
                 src={currentHeroImg}
                 width="100%"
-              ></img>
+              ></img> */}
+              <Images images={images} />
+              <Videos videos={videos} />
             </Media>
           :
             <Media>
