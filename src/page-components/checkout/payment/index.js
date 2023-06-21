@@ -9,7 +9,9 @@ import { useQuery } from 'react-query';
 import ServiceApi from 'lib/service-api';
 import { useTranslation } from 'next-i18next';
 import { useBasket } from 'components/basket';
-import { Spinner } from 'ui/spinner';
+import { Spinner } from 'ui/spinner'; 
+
+import Delivery from './delivery'
 
 import {
   Input,
@@ -45,7 +47,8 @@ export default function Payment() {
   const [state, setState] = useState({
     firstName: '',
     lastName: '',
-    email: ''
+    email: '',
+    shippingAddress: ''
   });
 
   const paymentConfig = useQuery('paymentConfig', () =>
@@ -80,7 +83,7 @@ export default function Payment() {
     multilingualUrlPrefix = '/' + router.locale;
   }
 
-  const { firstName, lastName, email } = state;
+  const { firstName, lastName, email, shippingAddress } = state;
 
   function getURL(path) {
     return `${location.protocol}//${location.host}${multilingualUrlPrefix}${path}`;
@@ -265,6 +268,34 @@ export default function Payment() {
           </Row>
         </form>
       </CheckoutFormGroup>
+      
+
+      {/* adding delivery details */}
+
+      <CheckoutFormGroup>
+        <SectionHeader>{('Delivery')}</SectionHeader>
+        <form noValidate>
+          <Row>
+            <InputGroup>
+              <Label htmlFor="address">{t('customer:address')}</Label>
+              {/* <Input
+                name="address"
+                type="text"
+                // value={shippingAddress}
+                onChange={(e) => checkAddress(e.target.value)}
+                // onChange={(e) => setState({ ...state, shippingAddress: e.target.value })}
+                required
+              /> */}
+
+              <Delivery />
+              
+
+            </InputGroup>
+          </Row>
+        </form>
+      </CheckoutFormGroup>
+
+
 
       <Voucher />
 
