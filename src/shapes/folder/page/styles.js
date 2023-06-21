@@ -1,10 +1,13 @@
 import styled from 'styled-components';
 import { responsive, Outer as O } from 'ui';
 
-export const H1 = styled.h1`
+export const GridHeading = styled.h1`
   font-size: 1.5rem;
-
+  margin-bottom: 1.8rem;
+  padding-bottom: 8px;
+  border-bottom: 1px solid grey;
 `;
+
 export const Outer = styled(O)`
   min-height: initial;
   ${responsive.mdPlus} {

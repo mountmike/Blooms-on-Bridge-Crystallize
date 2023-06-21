@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 export const Outer = styled.footer`
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(2, 2fr);
   max-width: 1600px;
   margin: 50px auto;
   border-top: 2px solid var(--color-box-background);
@@ -12,6 +12,13 @@ export const Outer = styled.footer`
 
 export const Logo = styled.div`
   width: 70px;
+`;
+
+export const Socials = styled.div`
+  display: flex;
+  font-size: .25rem;
+  gap: 8px;
+  margin-top: 1rem;
 `;
 
 export const Powered = styled.div`
@@ -27,7 +34,7 @@ export const Powered = styled.div`
   }
 
   svg {
-    width: 120px;
+    width: 3rem;
   }
 `;
 

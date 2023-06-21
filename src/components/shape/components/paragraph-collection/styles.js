@@ -30,12 +30,12 @@ export const Temp = styled.div`
 `;
 
 export const Body = styled.div`
-  margin: 1em 0;
+  margin: 0;
 `;
 
 export const Text = styled.div`
   grid-area: content;
-  margin-bottom: 100px;
+  margin-bottom: 50px;
 `;
 export const Media = styled.div`
   grid-area: media;

@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import ContentTransformer from 'ui/content-transformer';
 
 const Outer = styled.section`
-  padding-bottom: 25px;
+  padding-bottom: 10px;
 `;
 
 const Description = styled.div`
@@ -13,7 +13,7 @@ const H1 = styled.h1`
   font-size: var(--font-size-xl);
   color: var(--color-text-main);
   max-width: var(--font-max-width);
-  margin-bottom: 15px;
+  margin-bottom: 10px;
 `;
 
 export default function PageHeader({ title, description }) {

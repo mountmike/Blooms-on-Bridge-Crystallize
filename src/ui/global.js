@@ -8,11 +8,11 @@ export default createGlobalStyle`
     --font-family-main: "Trebuchet MS", sans-serif;
 
 
-    --font-size-xxl: 40px;
-    --font-size-xl: 32px;
-    --font-size-l: 26px;
-    --font-size-m: 20px;
-    --font-size-s: 16px;
+    --font-size-xxl: 38px;
+    --font-size-xl: 30px;
+    --font-size-l: 24px;
+    --font-size-m: 17px;
+    --font-size-s: 15px;
     --font-size-xs: 14px;
 
     --font-size-body: var(--font-size-m);

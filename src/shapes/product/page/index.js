@@ -97,7 +97,7 @@ export default function ProductShape({ product, locale }) {
             </span>
             :
             <span>
-              <span> - </span>
+              <span> ⚘ </span>
               <Link href={link.path}>{link.name}</Link>
             </span>
             

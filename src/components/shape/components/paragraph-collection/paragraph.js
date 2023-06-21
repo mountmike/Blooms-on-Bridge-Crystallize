@@ -15,28 +15,28 @@ const Paragraph = ({
   videos,
   headingComponent: HeadingComponent = H3
 }) => {
-  const [currentHeroImg, setCurrentHeroImg] = useState(null)
+  // const [currentHeroImg, setCurrentHeroImg] = useState(null)
   const hasText = !!body?.json?.length;
   const hasMedia = !!images || !!videos;
   const isHomePage = title.text === "Blooms on Bridge, Benalla"
 
-  useEffect(() => {
-    if (hasMedia) {
-      setCurrentHeroImg(images[0].url)
+  // useEffect(() => {
+  //   if (hasMedia) {
+  //     setCurrentHeroImg(images[0].url)
 
-      let index = 0
+  //     let index = 0
       
-      setInterval(() => {
-        if (index < images.length - 1) {
-          index++
-          setCurrentHeroImg(images[index].url)
-        } else {
-          index = 0
-          setCurrentHeroImg(images[index].url)
-        }
-      }, 15000)
-    } 
-  }, [])
+  //     setInterval(() => {
+  //       if (index < images.length - 1) {
+  //         index++
+  //         setCurrentHeroImg(images[index].url)
+  //       } else {
+  //         index = 0
+  //         setCurrentHeroImg(images[index].url)
+  //       }
+  //     }, 15000)
+  //   } 
+  // }, [])
 
 
 

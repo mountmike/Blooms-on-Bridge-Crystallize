@@ -2,7 +2,7 @@
 import styled from 'styled-components';
 
 export const Main = styled.main`
-  padding-bottom: 50px;
+  padding-bottom: 25px;
   border-style: solid;
   border-color: var(--color-main-background);
 `;
