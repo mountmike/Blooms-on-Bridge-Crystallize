@@ -25,10 +25,10 @@ export default function Footer() {
           </a>
         </Link>
         <Socials>
-            <a className={styles.externalLink} href="https://www.facebook.com/bloomsonbridge" target='_blank'>
+            <a className={styles.externalLink} href="https://www.facebook.com/bloomsonbridge" target='_blank' rel="noopener noreferrer">
               <FontAwesomeIcon icon={faFacebook} />
             </a>
-            <a className={styles.externalLink} href="https://www.instagram.com/bloomsonbridge/" target='_blank'>
+            <a className={styles.externalLink} href="https://www.instagram.com/bloomsonbridge/" target='_blank' rel="noopener noreferrer">
               <FontAwesomeIcon icon={faInstagram}  />
             </a>
         </Socials>
