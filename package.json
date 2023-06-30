@@ -49,6 +49,7 @@
     "@mui/material": "^5.13.5",
     "@stripe/react-stripe-js": "1.1.2",
     "@stripe/stripe-js": "1.8.0",
+    "@syncfusion/ej2-react-grids": "^22.1.36",
     "axios": "^1.4.0",
     "babel-plugin-macros": "^3.1.0",
     "ex-google-map-autocomplete": "^1.0.5",

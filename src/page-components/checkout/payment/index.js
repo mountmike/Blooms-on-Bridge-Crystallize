@@ -288,7 +288,6 @@ export default function Payment() {
               /> */}
 
               <Delivery />
-              
 
             </InputGroup>
           </Row>
