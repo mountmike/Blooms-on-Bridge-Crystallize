@@ -181,6 +181,7 @@ export function BasketProvider({ locale, children }) {
         basketModel,
         cart,
         total: serverBasket?.total || {},
+        delivery: 10,
         totalQuantity,
         attentionCartItem,
         actions: {

@@ -9,7 +9,7 @@ import { Outer, Rows, Row, RowValue, SpinnerWrap } from './styles';
 
 export default function Totals(props) {
   const { t } = useTranslation(['common', 'basket']);
-  const { cart, total, status } = useBasket();
+  const { cart, total, delivery, status } = useBasket();
 
   if (cart.length === 0) {
     return null;
@@ -45,14 +45,23 @@ export default function Totals(props) {
             </RowValue>
           </Row>
         )}
-        <Row modifier="total-tax">
+          <Row modifier="delivery">
+            <span>Delivery:</span>
+            <RowValue hide={isLoading}>
+              {printCurrencyAmount(delivery)}
+            </RowValue>
+          </Row>
+
+        {/* <Row modifier="total-tax">
           <span>{t('basket:tax')}:</span>
           <RowValue hide={isLoading}>
             {printCurrencyAmount(
               parseInt((total.gross - total.net) * 100, 10) / 100
             )}
           </RowValue>
-        </Row>
+        </Row> */}
+
+
         <Row modifier="to-pay">
           <span>{t('basket:totalToPay')}:</span>
           <RowValue hide={isLoading}>

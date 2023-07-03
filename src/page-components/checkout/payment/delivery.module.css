@@ -1,0 +1,12 @@
+.addressInput {
+    background: var(--color-main-background);
+    border-bottom: 1px solid var(--color-box-background);
+    border: none;
+    color: var(--color-text-sub);
+    font-size: 1rem;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    padding: 15px 15px;
+    transition: border 0.2s ease-in-out;
+    width: 100%;
+}

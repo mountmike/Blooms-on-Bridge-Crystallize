@@ -1,5 +1,5 @@
 /* eslint-disable react/display-name */
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import dynamic from 'next/dynamic';
 
@@ -11,7 +11,7 @@ import { useTranslation } from 'next-i18next';
 import { useBasket } from 'components/basket';
 import { Spinner } from 'ui/spinner'; 
 
-import Delivery from './delivery'
+import AddressSearch from './AddressSearch'
 
 import {
   Input,
@@ -48,8 +48,20 @@ export default function Payment() {
     firstName: '',
     lastName: '',
     email: '',
-    shippingAddress: ''
   });
+  const [deliveryAddress, setDeliveryAddress] = useState({
+    unitNumber: '',
+    streetNumber: '',
+    streetName: '',
+    suburb: '',
+    territory: '',
+    postcode: ''
+  })
+
+  useEffect(() => {
+    console.log(state);
+    console.log(deliveryAddress);
+  }, [state, deliveryAddress])
 
   const paymentConfig = useQuery('paymentConfig', () =>
     ServiceApi({
@@ -83,7 +95,8 @@ export default function Payment() {
     multilingualUrlPrefix = '/' + router.locale;
   }
 
-  const { firstName, lastName, email, shippingAddress } = state;
+  const { firstName, lastName, email } = state;
+  const { unitNumber, streetNumber, streetName, suburb, territory, postcode } = deliveryAddress
 
   function getURL(path) {
     return `${location.protocol}//${location.host}${multilingualUrlPrefix}${path}`;
@@ -102,7 +115,7 @@ export default function Payment() {
       addresses: [
         {
           type: 'billing',
-          email: email || null
+          email: email || null,
         }
       ]
     },
@@ -270,29 +283,70 @@ export default function Payment() {
       </CheckoutFormGroup>
       
 
-      {/* adding delivery details */}
-
       <CheckoutFormGroup>
         <SectionHeader>{('Delivery')}</SectionHeader>
         <form noValidate>
           <Row>
             <InputGroup>
               <Label htmlFor="address">{t('customer:address')}</Label>
-              {/* <Input
-                name="address"
-                type="text"
-                // value={shippingAddress}
-                onChange={(e) => checkAddress(e.target.value)}
-                // onChange={(e) => setState({ ...state, shippingAddress: e.target.value })}
-                required
-              /> */}
-
-              <Delivery />
-
+              <AddressSearch
+                setAddress={setDeliveryAddress}
+              />
+            </InputGroup>
+          </Row> 
+          <Row>
+            <InputGroup>
+              <Label htmlFor="unitNumber">Unit Number</Label>
+              <Input 
+                name="unitNumber"
+                onChange={(e) =>
+                  setDeliveryAddress({ ...deliveryAddress, unitNumber: e.target.value })
+                }
+              />
+            </InputGroup>
+            <InputGroup>
+              <Label htmlFor="streetNumber">Street Number</Label>
+              <Input 
+                name="streetNumber"
+                value={streetNumber}
+              />
+            </InputGroup>
+          </Row>
+          <Row>
+            <InputGroup>
+              <Label htmlFor="streetName">Street Name</Label>
+              <Input
+                name='streetName'
+                value={streetName}
+              />
+            </InputGroup>
+            <InputGroup>
+              <Label htmlFor="suburb">City/Town</Label>
+              <Input 
+                name='suburb'
+                value={suburb}
+              />
+            </InputGroup>
+          </Row>
+          <Row>
+            <InputGroup>
+              <Label htmlFor="territory">State</Label>
+              <Input 
+                name='territory'
+                value={territory}
+              />
+            </InputGroup>
+            <InputGroup>
+              <Label htmlFor="postcode">Postcode</Label>
+              <Input 
+                name='postcode'
+                value={postcode}
+              />
             </InputGroup>
           </Row>
         </form>
       </CheckoutFormGroup>
+      
 
 
 
