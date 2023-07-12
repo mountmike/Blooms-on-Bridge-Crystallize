@@ -1,4 +1,9 @@
 /* eslint-disable react/display-name */
+import { loadStripe } from '@stripe/stripe-js';
+const stripePromise = loadStripe(
+  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
+);
+
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import dynamic from 'next/dynamic';
@@ -40,6 +45,19 @@ const Row = styled.div`
 const Inner = styled.div``;
 
 export default function Payment() {
+  React.useEffect(() => {
+    // Check to see if this is a redirect back from Checkout
+    const query = new URLSearchParams(window.location.search);
+    if (query.get('success')) {
+      console.log('Order placed! You will receive an email confirmation.');
+    }
+
+    if (query.get('canceled')) {
+      console.log('Order canceled -- continue to shop around and checkout when you’re ready.');
+    }
+  }, []);
+
+
   const { t } = useTranslation(['checkout', 'customer']);
   const router = useRouter();
   const { basketModel, actions } = useBasket();
@@ -58,10 +76,13 @@ export default function Payment() {
     postcode: ''
   })
 
-  useEffect(() => {
-    console.log(state);
-    console.log(deliveryAddress);
-  }, [state, deliveryAddress])
+  const deliveryFee = () => {
+    if (deliveryAddress.postcode == "3672") {
+      return 10
+    } else {
+      return 20
+    }
+  }
 
   const paymentConfig = useQuery('paymentConfig', () =>
     ServiceApi({
@@ -281,7 +302,6 @@ export default function Payment() {
           </Row>
         </form>
       </CheckoutFormGroup>
-      
 
       <CheckoutFormGroup>
         <SectionHeader>{('Delivery')}</SectionHeader>
@@ -345,10 +365,11 @@ export default function Payment() {
             </InputGroup>
           </Row>
         </form>
+        <p>
+          <b>Delivery fee: </b>
+          ${deliveryFee()}
+        </p>
       </CheckoutFormGroup>
-      
-
-
 
       <Voucher />
 
@@ -410,6 +431,42 @@ export default function Payment() {
           )}
         </div>
       </CheckoutFormGroup>
+
+      <form action="/api/checkout_sessions" method="POST">
+      <section>
+        <button type="submit" role="link">
+          Checkout
+        </button>
+      </section>
+      <style jsx>
+        {`
+          section {
+            background: #ffffff;
+            display: flex;
+            flex-direction: column;
+            width: 400px;
+            height: 112px;
+            border-radius: 6px;
+            justify-content: space-between;
+          }
+          button {
+            height: 36px;
+            background: #556cd6;
+            border-radius: 4px;
+            color: white;
+            border: 0;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0px 4px 5.5px 0px rgba(0, 0, 0, 0.07);
+          }
+          button:hover {
+            opacity: 0.8;
+          }
+        `}
+      </style>
+    </form>
+
     </Inner>
   );
 }
