@@ -152,3 +152,9 @@ export const Container = styled.div`
     padding: 50px 75px;
   }
 `;
+
+
+
+export const PaymentWrapper = styled.div`
+  background: white
+`

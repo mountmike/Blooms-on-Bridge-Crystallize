@@ -3,6 +3,8 @@ import React from 'react';
 import AttributeList from 'components/attribute-list';
 import { useTranslation } from 'next-i18next';
 
+import { useBasket } from 'components/basket';
+
 import {
   Item,
   ItemAmount,
@@ -16,6 +18,11 @@ import {
 
 function OrderItem({ item }) {
   const { t } = useTranslation(['common', 'basket']);
+  const basket = useBasket();
+
+  const increaseQuantity = () => {
+    basket.actions.decrementItem()
+  }
 
   if (item.sku.startsWith('--voucher--')) {
     return (
@@ -54,6 +61,10 @@ function OrderItem({ item }) {
         )}
       </ItemInfo>
       <ItemAmount>
+
+        {/* TMP increase / decrease product quantity buttons */}
+        <button>+</button> | <button>-</button>
+
         <ItemQuantity>
           {item.quantity} x{' '}
           {t('price', {

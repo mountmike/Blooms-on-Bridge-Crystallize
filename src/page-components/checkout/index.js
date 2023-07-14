@@ -36,6 +36,9 @@ function Checkout() {
           <Payment />
         </Container>
         <Container>
+        {/* tmp CART EMPTY FUNCTION */}
+        <button onClick={e => basket.actions.empty()}>empty cart</button>
+
           <CheckoutFormGroup>
             <SectionHeader>{t('title')}</SectionHeader>
             <OrderItems cart={cart} />

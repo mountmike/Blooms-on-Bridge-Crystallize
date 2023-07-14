@@ -27,7 +27,7 @@ import {
   PaymentButton,
   PaymentProvider,
   SectionHeader,
-  CheckoutFormGroup
+  CheckoutFormGroup,
 } from '../styles';
 import Voucher from '../voucher';
 
@@ -57,7 +57,6 @@ export default function Payment() {
     }
   }, []);
 
-
   const { t } = useTranslation(['checkout', 'customer']);
   const router = useRouter();
   const { basketModel, actions } = useBasket();
@@ -75,13 +74,14 @@ export default function Payment() {
     territory: '',
     postcode: ''
   })
+  const basket = useBasket();
 
-  const deliveryFee = () => {
-    if (deliveryAddress.postcode == "3672") {
-      return 10
-    } else {
-      return 20
-    }
+  function addDeliveryFee() {
+    basket.actions.addItem({
+      sku: "pickup-from-shop-1689318863217",
+      path: "/deliveryfees/delivery",
+ 
+    });
   }
 
   const paymentConfig = useQuery('paymentConfig', () =>
@@ -319,16 +319,22 @@ export default function Payment() {
               <Label htmlFor="unitNumber">Unit Number</Label>
               <Input 
                 name="unitNumber"
+                type='number'
                 onChange={(e) =>
                   setDeliveryAddress({ ...deliveryAddress, unitNumber: e.target.value })
                 }
+                value={unitNumber}
               />
             </InputGroup>
             <InputGroup>
               <Label htmlFor="streetNumber">Street Number</Label>
               <Input 
                 name="streetNumber"
+                type='text'
                 value={streetNumber}
+                onChange={(e) =>
+                  setDeliveryAddress({ ...deliveryAddress, streetNumber: e.target.value })
+                }
               />
             </InputGroup>
           </Row>
@@ -338,6 +344,10 @@ export default function Payment() {
               <Input
                 name='streetName'
                 value={streetName}
+                type='text'
+                onChange={(e) =>
+                  setDeliveryAddress({ ...deliveryAddress, streetName: e.target.value })
+                }
               />
             </InputGroup>
             <InputGroup>
@@ -345,6 +355,10 @@ export default function Payment() {
               <Input 
                 name='suburb'
                 value={suburb}
+                type='text'
+                onChange={(e) =>
+                  setDeliveryAddress({ ...deliveryAddress, suburb: e.target.value })
+                }
               />
             </InputGroup>
           </Row>
@@ -354,6 +368,10 @@ export default function Payment() {
               <Input 
                 name='territory'
                 value={territory}
+                type='text'
+                onChange={(e) =>
+                  setDeliveryAddress({ ...deliveryAddress, territory: e.target.value })
+                }
               />
             </InputGroup>
             <InputGroup>
@@ -361,19 +379,41 @@ export default function Payment() {
               <Input 
                 name='postcode'
                 value={postcode}
+                type='number'
+                onChange={(e) =>
+                  setDeliveryAddress({ ...deliveryAddress, postcode: e.target.value })
+                }
               />
             </InputGroup>
           </Row>
         </form>
-        <p>
-          <b>Delivery fee: </b>
-          ${deliveryFee()}
-        </p>
+      </CheckoutFormGroup>
+
+      <SectionHeader>{('Delivery')}</SectionHeader>
+      <CheckoutFormGroup>
+        <Row>
+          <input
+            type='radio'
+            id='pickup'
+            name='delivery'
+          />
+          <label for="pickup">In store pickup - FREE</label>
+        </Row>
+        <Row>
+          <input
+            type='radio'
+            id='in-town'
+            name='delivery'
+          />
+
+          <label for="in-town">In town delivery - $10</label>
+        </Row>
       </CheckoutFormGroup>
 
       <Voucher />
+      
 
-      <CheckoutFormGroup withUpperMargin>
+      {/* <CheckoutFormGroup withUpperMargin>
         <div>
           <SectionHeader>{t('choosePaymentMethod')}</SectionHeader>
           {paymentConfig.loading ? (
@@ -420,6 +460,8 @@ export default function Payment() {
                         </PaymentButton>
                       );
                     })}
+
+                    
                   </PaymentSelector>
 
                   {paymentProviders
@@ -430,42 +472,23 @@ export default function Payment() {
             </div>
           )}
         </div>
-      </CheckoutFormGroup>
-
-      <form action="/api/checkout_sessions" method="POST">
-      <section>
-        <button type="submit" role="link">
-          Checkout
-        </button>
-      </section>
-      <style jsx>
-        {`
-          section {
-            background: #ffffff;
-            display: flex;
-            flex-direction: column;
-            width: 400px;
-            height: 112px;
-            border-radius: 6px;
-            justify-content: space-between;
-          }
-          button {
-            height: 36px;
-            background: #556cd6;
-            border-radius: 4px;
-            color: white;
-            border: 0;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            box-shadow: 0px 4px 5.5px 0px rgba(0, 0, 0, 0.07);
-          }
-          button:hover {
-            opacity: 0.8;
-          }
-        `}
-      </style>
-    </form>
+      </CheckoutFormGroup> */}
+      
+      <PaymentProvider>
+          <StripeCheckout
+            checkoutModel={checkoutModel}
+            onSuccess={(crystallizeOrderId) => {
+              router.push(
+                checkoutModel.confirmationURL.replace(
+                  '{crystallizeOrderId}',
+                  crystallizeOrderId
+                )
+              );
+              scrollTo(0, 0);
+            }}
+          />
+      </PaymentProvider>
+        
 
     </Inner>
   );

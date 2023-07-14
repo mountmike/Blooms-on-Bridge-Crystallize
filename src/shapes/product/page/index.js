@@ -19,6 +19,8 @@ import { getData } from '../get-data';
 import Stock from './components/stock';
 import { useTranslation } from 'next-i18next';
 
+
+
 import {
   Inner,
   Media,

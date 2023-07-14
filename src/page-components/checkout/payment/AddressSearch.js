@@ -11,13 +11,18 @@ export default function AddressSearch({ setAddress }) {
     if (place === undefined) {
       return
     }
+
+    place = Object.assign({}, ...place.map(index => {
+      return { [index.types[0]]: index.long_name }
+    }))
+
     let formattedAddress = {
-      unitNumber: '',
-      streetNumber: place[0].long_name,
-      streetName: place[1].long_name,
-      suburb: place[2].long_name,
-      territory: place[4].long_name,
-      postcode: place[6].long_name
+      unitNumber: place.subpremise ? place.subpremise : "",
+      streetNumber: place.street_number,
+      streetName: place.route,
+      suburb: place.locality,
+      territory: place.administrative_area_level_1,
+      postcode: place.postal_code,
     }
     setAddress(formattedAddress)
   }
