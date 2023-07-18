@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer, useRef, useMemo } from 'react';
+import React, { useEffect, useReducer, useRef, useMemo, useState } from 'react';
 
 import ServiceApi from 'lib/service-api';
 
@@ -73,6 +73,9 @@ export function BasketProvider({ locale, children }) {
     }
   }, [status, clientBasket, serverBasket, changeTriggeredByOtherTab]);
 
+  const [delivery, setDelivery] = useState(0)
+
+
   /**
    * Define the basketModel object.
    * Used here and in the checkout
@@ -83,7 +86,7 @@ export function BasketProvider({ locale, children }) {
       cart: clientBasket.cart.map(clientCartItemForAPI),
       voucherCode: clientBasket.voucherCode,
       crystallizeOrderId: clientBasket.crystallizeOrderId,
-      klarnaOrderId: clientBasket.klarnaOrderId
+      klarnaOrderId: clientBasket.klarnaOrderId,
     }),
     [locale, clientBasket]
   );
@@ -181,7 +184,7 @@ export function BasketProvider({ locale, children }) {
         basketModel,
         cart,
         total: serverBasket?.total || {},
-        delivery: 10,
+        delivery,
         totalQuantity,
         attentionCartItem,
         actions: {
@@ -200,7 +203,10 @@ export function BasketProvider({ locale, children }) {
               crystallizeOrderId
             }),
           setKlarnaOrderId: (klarnaOrderId) =>
-            dispatch({ action: 'set-klarna-order-id', klarnaOrderId })
+            dispatch({ action: 'set-klarna-order-id', klarnaOrderId }),
+          addDeliveryCost: (ammount) => {
+            setDelivery(ammount)
+          }
         }
       }}
     >

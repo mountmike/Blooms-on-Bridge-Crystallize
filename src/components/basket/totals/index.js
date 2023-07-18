@@ -48,7 +48,7 @@ export default function Totals(props) {
           <Row modifier="delivery">
             <span>Delivery:</span>
             <RowValue hide={isLoading}>
-              {printCurrencyAmount(delivery)}
+              {printCurrencyAmount(Number(delivery))}
             </RowValue>
           </Row>
 
@@ -65,7 +65,7 @@ export default function Totals(props) {
         <Row modifier="to-pay">
           <span>{t('basket:totalToPay')}:</span>
           <RowValue hide={isLoading}>
-            {printCurrencyAmount(total.gross)}
+            {printCurrencyAmount(total.gross + Number(delivery))}
           </RowValue>
         </Row>
       </Rows>

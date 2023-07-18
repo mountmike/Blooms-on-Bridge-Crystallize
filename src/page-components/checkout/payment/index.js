@@ -61,7 +61,7 @@ export default function Payment() {
   const { t } = useTranslation(['checkout', 'customer']);
   const router = useRouter();
   const { basketModel, actions } = useBasket();
-  const basket = useBasket(); // redundant??
+
   // const [selectedPaymentProvider, setSelectedPaymentProvider] = useState(null);
   const [state, setState] = useState({
     firstName: '',
@@ -79,16 +79,17 @@ export default function Payment() {
   const [deliveryMethod, setDeliveryMethod] = useState(null)
 
   useEffect(() => {
-    console.log(deliveryMethod)
+    actions.addDeliveryCost(deliveryMethod)
   }, [deliveryMethod])
 
-  function addDeliveryFee() {
-    basketModel.actions.addItem({
-      sku: "pickup-from-shop-1689318863217",
-      path: "/deliveryfees/delivery",
+  // tmp mockup for adding delivery
+  // function addDeliveryFee() {
+  //   basketModel.actions.addItem({
+  //     sku: "pickup-from-shop-1689318863217",
+  //     path: "/deliveryfees/delivery",
  
-    });
-  }
+  //   });
+  // }
 
   const paymentConfig = useQuery('paymentConfig', () =>
     ServiceApi({
@@ -148,7 +149,7 @@ export default function Payment() {
     },
     confirmationURL: getURL(`/confirmation/{crystallizeOrderId}?emptyBasket`),
     checkoutURL: getURL(`/checkout`),
-    termsURL: getURL(`/terms`)
+    termsURL: getURL(`/terms`),
   };
 
   const paymentProviders = [

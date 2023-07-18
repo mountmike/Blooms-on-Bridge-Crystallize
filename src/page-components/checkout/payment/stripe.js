@@ -31,7 +31,7 @@ function Form({ stripeClientSecret, checkoutModel, onSuccess, onError }) {
         setTimeout(go, 100);
         return;
       }
-
+      
       const { customer } = checkoutModel;
 
       const { error, paymentIntent } = await stripe.confirmCardPayment(
@@ -74,8 +74,8 @@ function Form({ stripeClientSecret, checkoutModel, onSuccess, onError }) {
               paymentIntentId: paymentIntent.id
             }
           });
-          // console.log(paymentIntent);
-          // console.log(response);
+          console.log(paymentIntent);
+          console.log(response);
           const {
             success,
             orderId

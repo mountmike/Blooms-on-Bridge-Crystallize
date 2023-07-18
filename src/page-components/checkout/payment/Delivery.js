@@ -1,5 +1,3 @@
-import { useState } from 'react';
-import styles from './delivery.module.css'
 import styled from 'styled-components';
 
 const willDeliverList = [
