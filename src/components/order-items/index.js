@@ -13,16 +13,22 @@ import {
   ItemName,
   Items,
   ItemQuantity,
-  ItemPrice
+  ItemPrice,
+  ItemQuantityChanger
 } from './styles';
 
 function OrderItem({ item }) {
   const { t } = useTranslation(['common', 'basket']);
   const basket = useBasket();
 
-  const increaseQuantity = () => {
-    basket.actions.decrementItem()
-  }
+function increment() {
+  basket.actions.incrementItem(item);
+}
+
+function decrement() {
+  basket.actions.decrementItem(item);
+}
+
 
   if (item.sku.startsWith('--voucher--')) {
     return (
@@ -61,10 +67,6 @@ function OrderItem({ item }) {
         )}
       </ItemInfo>
       <ItemAmount>
-
-        {/* TMP increase / decrease product quantity buttons */}
-        <button>+</button> | <button>-</button>
-
         <ItemQuantity>
           {item.quantity} x{' '}
           {t('price', {
@@ -79,6 +81,19 @@ function OrderItem({ item }) {
           })}
         </ItemPrice>
       </ItemAmount>
+      <ItemQuantityChanger>
+        <button
+            onClick={decrement}
+            type="button"
+            disabled={item.quantity === 1}
+          >
+            -
+          </button>
+          <ItemQuantity>{item.quantity}</ItemQuantity>
+          <button onClick={increment} type="button">
+            +
+          </button>
+        </ItemQuantityChanger>
     </Item>
   );
 }

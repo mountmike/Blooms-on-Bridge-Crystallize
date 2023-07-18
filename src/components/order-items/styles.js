@@ -61,3 +61,14 @@ export const ItemPrice = styled.div`
   font-size: 1.2rem;
   font-weight: 600;
 `;
+
+export const ItemQuantityChanger = styled.span`
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
+  justify-content: space-between;
+  margin-left: 15px;
+  button {
+    margin: 6px 0;
+  }
+`;

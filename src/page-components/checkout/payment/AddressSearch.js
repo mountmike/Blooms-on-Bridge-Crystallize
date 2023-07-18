@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import styled from 'styled-components';
-import styles from './delivery.module.css'
+import styles from './address.module.css'
 import Autocomplete from "react-google-autocomplete";
 
 

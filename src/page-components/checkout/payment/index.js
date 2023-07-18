@@ -17,6 +17,7 @@ import { useBasket } from 'components/basket';
 import { Spinner } from 'ui/spinner'; 
 
 import AddressSearch from './AddressSearch'
+import Delivery from './Delivery'
 
 import {
   Input,
@@ -60,7 +61,8 @@ export default function Payment() {
   const { t } = useTranslation(['checkout', 'customer']);
   const router = useRouter();
   const { basketModel, actions } = useBasket();
-  const [selectedPaymentProvider, setSelectedPaymentProvider] = useState(null);
+  const basket = useBasket(); // redundant??
+  // const [selectedPaymentProvider, setSelectedPaymentProvider] = useState(null);
   const [state, setState] = useState({
     firstName: '',
     lastName: '',
@@ -74,10 +76,14 @@ export default function Payment() {
     territory: '',
     postcode: ''
   })
-  const basket = useBasket();
+  const [deliveryMethod, setDeliveryMethod] = useState(null)
+
+  useEffect(() => {
+    console.log(deliveryMethod)
+  }, [deliveryMethod])
 
   function addDeliveryFee() {
-    basket.actions.addItem({
+    basketModel.actions.addItem({
       sku: "pickup-from-shop-1689318863217",
       path: "/deliveryfees/delivery",
  
@@ -391,25 +397,13 @@ export default function Payment() {
 
       <SectionHeader>{('Delivery')}</SectionHeader>
       <CheckoutFormGroup>
-        <Row>
-          <input
-            type='radio'
-            id='pickup'
-            name='delivery'
-          />
-          <label for="pickup">In store pickup - FREE</label>
-        </Row>
-        <Row>
-          <input
-            type='radio'
-            id='in-town'
-            name='delivery'
-          />
-
-          <label for="in-town">In town delivery - $10</label>
-        </Row>
+        <Delivery 
+        suburb={deliveryAddress.suburb}
+        deliveryMethod={deliveryMethod}
+        setDeliveryMethod={setDeliveryMethod}
+        />
       </CheckoutFormGroup>
-
+      <br />  
       <Voucher />
       
 
@@ -474,6 +468,7 @@ export default function Payment() {
         </div>
       </CheckoutFormGroup> */}
       
+      {deliveryMethod &&
       <PaymentProvider>
           <StripeCheckout
             checkoutModel={checkoutModel}
@@ -488,7 +483,7 @@ export default function Payment() {
             }}
           />
       </PaymentProvider>
-        
+}
 
     </Inner>
   );

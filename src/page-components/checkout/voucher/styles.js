@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { Input } from '../styles';
 
 export const VoucherDisplayer = styled.div`
+
   display: flex;
   align-items: stretch;
 
