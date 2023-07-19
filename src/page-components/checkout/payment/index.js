@@ -77,12 +77,14 @@ export default function Payment() {
     streetName: '',
     suburb: '',
     territory: '',
-    postcode: ''
+    postcode: '',
+    deliveryDate: ''
   })
   const [deliveryMethod, setDeliveryMethod] = useState(null)
   const [isReadyForStripe, setIsReadyForStripe] = useState(false)
 
   useEffect(() => {
+    console.log(deliveryAddress);
     let { cart } = basketModel
     let currentDeliveryMethod = cart.filter(product => product.sku.startsWith("delivery"))
     
@@ -123,7 +125,7 @@ export default function Payment() {
       return
     }
 
-  }, [deliveryMethod])
+  }, [deliveryMethod, deliveryAddress])
 
   const paymentConfig = useQuery('paymentConfig', () =>
     ServiceApi({
@@ -463,6 +465,8 @@ export default function Payment() {
         deliveryMethod={deliveryMethod}
         setDeliveryMethod={setDeliveryMethod}
         isReadyForStripe={isReadyForStripe}
+        setDeliveryAddress={setDeliveryAddress}
+        deliveryAddress={deliveryAddress}
         />
       </CheckoutFormGroup>
 

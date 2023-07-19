@@ -1,5 +1,11 @@
 import styled from 'styled-components';
 
+import { format } from 'date-fns'
+import { enGB } from 'date-fns/locale'
+import { DatePickerCalendar } from 'react-nice-dates'
+import 'react-nice-dates/build/style.css'
+import { useState } from 'react';
+
 const willDeliverList = [
     "arcadia",
     "arcadia south",
@@ -168,12 +174,12 @@ const willDeliverList = [
     "whitfield"
 ];
 
-export default function Delivery({ suburb, deliveryMethod, setDeliveryMethod, isReadyForStripe }) {
-
-    const handleSelection = (e) => {
+export default function Delivery({ suburb, deliveryMethod, setDeliveryMethod, isReadyForStripe, setDeliveryAddress, deliveryAddress }) {
+    const [date, setDate] = useState()
+    const handleDeliverySelection = (e) => {
         setDeliveryMethod(e.target.value)
     }
-
+ 
     const isInTown = () => {
         return suburb.toLowerCase() === "benalla" ? true : false
     }
@@ -213,7 +219,7 @@ export default function Delivery({ suburb, deliveryMethod, setDeliveryMethod, is
         )
     } else {
         return (
-        <Wrapper onChange={handleSelection}>
+        <Wrapper onChange={handleDeliverySelection}>
             <Row>
                 <Label htmlFor="collect">Collect in store - <b>FREE</b></Label>
                 <Radio 
@@ -255,6 +261,22 @@ export default function Delivery({ suburb, deliveryMethod, setDeliveryMethod, is
                 />
             </Row>
             }
+            <br />
+            <Label><b>Delivery Date:</b> {date ? format(date, 'dd MMM yyyy', { locale: enGB }) : 'none'}</Label>
+            <DatePickerCalendar date={date} onDateChange={setDate} locale={enGB} />
+      
+            
+            {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DemoItem label="Please select a delivery/collection date">
+                    <MobileDatePicker 
+                    
+                        shouldDisableDate={isSunday}
+                        disablePast
+                        // onChange={(newValue) => setDeliveryAddress({ ...deliveryAddress, deliveryDate: newValue.$d })}
+                    />
+                    </DemoItem>
+            </LocalizationProvider>   */}
+            <br />        
         </Wrapper>
         )
     }
