@@ -29,7 +29,9 @@ import {
   PaymentProvider,
   SectionHeader,
   CheckoutFormGroup,
+  ErrorMessage
 } from '../styles';
+import { Button } from 'ui';
 import Voucher from '../voucher';
 
 const StripeCheckout = dynamic(() => import('./stripe'));
@@ -67,6 +69,7 @@ export default function Payment() {
     firstName: '',
     lastName: '',
     email: '',
+    phone: ''
   });
   const [deliveryAddress, setDeliveryAddress] = useState({
     unitNumber: '',
@@ -77,6 +80,7 @@ export default function Payment() {
     postcode: ''
   })
   const [deliveryMethod, setDeliveryMethod] = useState(null)
+  const [isReadyForStripe, setIsReadyForStripe] = useState(false)
 
   useEffect(() => {
     let { cart } = basketModel
@@ -121,7 +125,6 @@ export default function Payment() {
 
   }, [deliveryMethod])
 
-
   const paymentConfig = useQuery('paymentConfig', () =>
     ServiceApi({
       query: `
@@ -154,8 +157,18 @@ export default function Payment() {
     multilingualUrlPrefix = '/' + router.locale;
   }
 
-  const { firstName, lastName, email } = state;
+  const { firstName, lastName, email, phone } = state;
   const { unitNumber, streetNumber, streetName, suburb, territory, postcode } = deliveryAddress
+
+  const [error, setError] = useState("")
+  const handleStripeForm = () => {
+    const formFields = [firstName, lastName, email, phone, streetNumber, streetName, suburb, territory, postcode]
+    if (formFields.filter(field => !field).length > 0) {
+      setError("Please fill in all fields before proceeding.")
+      return
+    }
+    setIsReadyForStripe(true)
+  }
 
   function getURL(path) {
     return `${location.protocol}//${location.host}${multilingualUrlPrefix}${path}`;
@@ -338,11 +351,22 @@ export default function Payment() {
               />
             </InputGroup>
           </Row>
+          <Row>
+            <InputGroup>
+              <Label htmlFor="phone">{t('customer:phone')}</Label>
+              <Input
+                name="phone"
+                type="number"
+                value={phone}
+                onChange={(e) => setState({ ...state, phone: e.target.value })}
+                required
+              />
+            </InputGroup>
+          </Row>
         </form>
       </CheckoutFormGroup>
 
       <CheckoutFormGroup>
-        <SectionHeader>{('Delivery')}</SectionHeader>
         <form noValidate>
           <Row>
             <InputGroup>
@@ -373,6 +397,7 @@ export default function Payment() {
                 onChange={(e) =>
                   setDeliveryAddress({ ...deliveryAddress, streetNumber: e.target.value })
                 }
+                required
               />
             </InputGroup>
           </Row>
@@ -386,6 +411,7 @@ export default function Payment() {
                 onChange={(e) =>
                   setDeliveryAddress({ ...deliveryAddress, streetName: e.target.value })
                 }
+                required
               />
             </InputGroup>
             <InputGroup>
@@ -397,6 +423,7 @@ export default function Payment() {
                 onChange={(e) =>
                   setDeliveryAddress({ ...deliveryAddress, suburb: e.target.value })
                 }
+                required
               />
             </InputGroup>
           </Row>
@@ -410,6 +437,7 @@ export default function Payment() {
                 onChange={(e) =>
                   setDeliveryAddress({ ...deliveryAddress, territory: e.target.value })
                 }
+                required
               />
             </InputGroup>
             <InputGroup>
@@ -421,24 +449,24 @@ export default function Payment() {
                 onChange={(e) =>
                   setDeliveryAddress({ ...deliveryAddress, postcode: e.target.value })
                 }
+                required
               />
             </InputGroup>
           </Row>
         </form>
       </CheckoutFormGroup>
 
-      <SectionHeader>{('Delivery')}</SectionHeader>
+      <SectionHeader>{('Delivery Options')}</SectionHeader>
       <CheckoutFormGroup>
         <Delivery 
         suburb={deliveryAddress.suburb}
         deliveryMethod={deliveryMethod}
         setDeliveryMethod={setDeliveryMethod}
+        isReadyForStripe={isReadyForStripe}
         />
       </CheckoutFormGroup>
-      <br />  
-      <Voucher />
-      
 
+      {/* <Voucher /> */}
       {/* <CheckoutFormGroup withUpperMargin>
         <div>
           <SectionHeader>{t('choosePaymentMethod')}</SectionHeader>
@@ -499,24 +527,32 @@ export default function Payment() {
           )}
         </div>
       </CheckoutFormGroup> */}
+
+      {deliveryMethod && !isReadyForStripe &&
+      <CheckoutFormGroup>
+        <Button onClick={handleStripeForm} >Add credit card details</Button>
+        <ErrorMessage>{error}</ErrorMessage>
+      </CheckoutFormGroup>
+      }
       
-      {deliveryMethod &&
-      <PaymentProvider>
-          <StripeCheckout
-            checkoutModel={checkoutModel}
-            deliveryMethod={deliveryMethod}
-            onSuccess={(crystallizeOrderId) => {
-              router.push(
-                checkoutModel.confirmationURL.replace(
-                  '{crystallizeOrderId}',
-                  crystallizeOrderId
-                )
-              );
-              scrollTo(0, 0);
-            }}
-          />
-      </PaymentProvider>
-}
+      {isReadyForStripe && 
+        <PaymentProvider>
+          <SectionHeader>{('Payment Options')}</SectionHeader>
+            <StripeCheckout
+              checkoutModel={checkoutModel}
+              onSuccess={(crystallizeOrderId) => {
+                router.push(
+                  checkoutModel.confirmationURL.replace(
+                    '{crystallizeOrderId}',
+                    crystallizeOrderId
+                  )
+                );
+                scrollTo(0, 0);
+              }}
+            />
+        </PaymentProvider>
+      }
+
 
     </Inner>
   );

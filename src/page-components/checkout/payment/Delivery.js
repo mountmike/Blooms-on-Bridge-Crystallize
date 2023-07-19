@@ -168,7 +168,7 @@ const willDeliverList = [
     "whitfield"
 ];
 
-export default function Delivery({ suburb, deliveryMethod, setDeliveryMethod }) {
+export default function Delivery({ suburb, deliveryMethod, setDeliveryMethod, isReadyForStripe }) {
 
     const handleSelection = (e) => {
         setDeliveryMethod(e.target.value)
@@ -206,7 +206,11 @@ export default function Delivery({ suburb, deliveryMethod, setDeliveryMethod }) 
     `
 
     if (!suburb) {
-        return null
+        return (
+            <Wrapper>
+                <span>Please enter a valid address to calculate delivery</span>
+            </Wrapper>
+        )
     } else {
         return (
         <Wrapper onChange={handleSelection}>
@@ -219,6 +223,7 @@ export default function Delivery({ suburb, deliveryMethod, setDeliveryMethod }) 
                 value='collect'
                 checked={deliveryMethod == 'collect'}
                 readOnly
+                disabled={isReadyForStripe}
                 />
             </Row>
 
@@ -232,6 +237,7 @@ export default function Delivery({ suburb, deliveryMethod, setDeliveryMethod }) 
                 value='deliveryInTown'
                 checked={deliveryMethod == 'deliveryInTown'}
                 readOnly
+                disabled={isReadyForStripe}
                 />
             </Row>
             }
@@ -245,6 +251,7 @@ export default function Delivery({ suburb, deliveryMethod, setDeliveryMethod }) 
                 value='deliveryOutsideTown' 
                 checked={deliveryMethod == 'deliveryOutsideTown' }
                 readOnly
+                disabled={isReadyForStripe}
                 />
             </Row>
             }

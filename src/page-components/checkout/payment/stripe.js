@@ -74,7 +74,7 @@ function Form({ stripeClientSecret, checkoutModel, onSuccess, onError }) {
               paymentIntentId: paymentIntent.id
             }
           });
-          console.log(paymentIntent);
+          console.log(paymentIntent.id);
           console.log(response);
           const {
             success,
@@ -154,6 +154,7 @@ export default function StripeWrapper({ deliveryMethod, checkoutModel, ...props 
   // useEffect(() => {
     
   // }, [deliveryMethod])
+
 
   const stripeClientSecret =
     stripePaymentIntent?.data?.data?.paymentProviders?.stripe

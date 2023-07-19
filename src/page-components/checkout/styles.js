@@ -64,7 +64,7 @@ export const Input = styled.input`
 
 export const ErrorMessage = styled.p`
   color: var(--color-error);
-  font-size: 16px;
+  font-size: 14px;
   margin-top: 1rem;
 `;
 
@@ -138,11 +138,22 @@ export const CheckoutFormGroup = styled.div`
   `}
 `;
 
+export const CheckoutFormGroupRight = styled.div`
+position: sticky;
+top: 50px;
+  ${(props) =>
+    props.withUpperMargin &&
+    `
+    margin-top: 50px;
+  `}
+`;
+
 export const Container = styled.div`
   background: var(--color-box-background);
   margin-bottom: 25px;
   padding: 50px 30px;
   width: 100%;
+  
 
   ${responsive.smPlus} {
     margin-bottom: 0;
@@ -152,8 +163,6 @@ export const Container = styled.div`
     padding: 50px 75px;
   }
 `;
-
-
 
 export const PaymentWrapper = styled.div`
   background: white

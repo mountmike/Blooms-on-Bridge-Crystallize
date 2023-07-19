@@ -12,7 +12,8 @@ import {
   Inner,
   SectionHeader,
   Container,
-  CheckoutFormGroup
+  CheckoutFormGroup,
+  CheckoutFormGroupRight,
 } from './styles';
 
 function Checkout() {
@@ -36,11 +37,11 @@ function Checkout() {
           <Payment />
         </Container>
         <Container>
-          <CheckoutFormGroup>
+          <CheckoutFormGroupRight>
             <SectionHeader>{t('title')}</SectionHeader>
             <OrderItems cart={cart} />
             <Totals style={{ padding: '0 15px' }} />
-          </CheckoutFormGroup>
+          </CheckoutFormGroupRight>
         </Container>
       </Inner>
     </Outer>

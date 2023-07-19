@@ -204,9 +204,6 @@ export function BasketProvider({ locale, children }) {
             }),
           setKlarnaOrderId: (klarnaOrderId) =>
             dispatch({ action: 'set-klarna-order-id', klarnaOrderId }),
-          addDeliveryCost: (ammount) => {
-            setDelivery(ammount)
-          }
         }
       }}
     >
