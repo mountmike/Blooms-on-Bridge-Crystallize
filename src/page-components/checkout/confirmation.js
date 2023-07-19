@@ -5,7 +5,7 @@ import { useRouter } from 'next/router';
 
 import Layout from 'components/layout';
 import { useBasket } from 'components/basket';
-import OrderItems from 'components/order-items';
+import OrderItemsConfirmed from 'components/order-items-confirmed';
 import { H1, H3, Outer, Header } from 'ui';
 import { useTranslation } from 'next-i18next';
 
@@ -82,6 +82,7 @@ export default function Confirmation({ order }) {
   }));
   const email = order.customer.addresses?.[0]?.email;
   const { total } = order;
+  const { delivery } = basket
 
   return (
     <Layout title={t('checkout:confirmation.title')}>
@@ -98,18 +99,12 @@ export default function Confirmation({ order }) {
           <BillingDetails order={order} />
           <Line />
           <H3>{t('order:item', { count: cart.length })}</H3>
-          <OrderItems cart={cart} />
+          <OrderItemsConfirmed cart={cart} />
           <Totals>
             <TotalLine bold>
-              {t('order:total')}:{' '}
+              {t('order:Total')}:{' '}
               {t('price', {
-                value: total.gross,
-                currency: total.currency
-              })}
-            </TotalLine>
-            <TotalLine>
-              {t('tax', {
-                value: total.gross - total.net,
+                value: total.gross + delivery,
                 currency: total.currency
               })}
             </TotalLine>

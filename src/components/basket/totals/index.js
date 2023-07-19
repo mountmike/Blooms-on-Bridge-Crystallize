@@ -9,7 +9,10 @@ import { Outer, Rows, Row, RowValue, SpinnerWrap } from './styles';
 
 export default function Totals(props) {
   const { t } = useTranslation(['common', 'basket']);
-  const { cart, total, delivery, status } = useBasket();
+  const { cart, total, status } = useBasket();
+
+  const hasAddedDelivery = cart.filter(product => product.sku.startsWith('delivery'))
+  const deliveryFee = hasAddedDelivery[0] ? hasAddedDelivery[0].price.gross : 0;
 
   if (cart.length === 0) {
     return null;
@@ -48,7 +51,7 @@ export default function Totals(props) {
           <Row modifier="delivery">
             <span>Delivery:</span>
             <RowValue hide={isLoading}>
-              {printCurrencyAmount(Number(delivery))}
+              {printCurrencyAmount(deliveryFee)}
             </RowValue>
           </Row>
 
@@ -65,7 +68,7 @@ export default function Totals(props) {
         <Row modifier="to-pay">
           <span>{t('basket:totalToPay')}:</span>
           <RowValue hide={isLoading}>
-            {printCurrencyAmount(total.gross + Number(delivery))}
+            {printCurrencyAmount(total.gross)}
           </RowValue>
         </Row>
       </Rows>

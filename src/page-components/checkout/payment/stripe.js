@@ -107,7 +107,7 @@ function Form({ stripeClientSecret, checkoutModel, onSuccess, onError }) {
   );
 }
 
-export default function StripeWrapper({ checkoutModel, ...props }) {
+export default function StripeWrapper({ deliveryMethod, checkoutModel, ...props }) {
   const [stripeLoader, setStripeLoader] = useState(null);
   const stripeConfig = useQuery('stripeConfig', () =>
     ServiceApi({
@@ -134,7 +134,7 @@ export default function StripeWrapper({ checkoutModel, ...props }) {
   }, [stripeConfig, stripeLoader]);
 
   // Get new paymentIntent
-  const stripePaymentIntent = useQuery('stripePaymentIntent', () =>
+  let stripePaymentIntent = useQuery('stripePaymentIntent', () =>
     ServiceApi({
       query: `
         mutation StripePaymentIntent($checkoutModel: CheckoutModelInput!) {
@@ -150,6 +150,10 @@ export default function StripeWrapper({ checkoutModel, ...props }) {
       }
     })
   );
+
+  // useEffect(() => {
+    
+  // }, [deliveryMethod])
 
   const stripeClientSecret =
     stripePaymentIntent?.data?.data?.paymentProviders?.stripe

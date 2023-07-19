@@ -21,17 +21,6 @@ function OrderItem({ item }) {
   const { t } = useTranslation(['common', 'basket']);
   const basket = useBasket();
 
-function increment() {
-  basket.actions.incrementItem(item);
-}
-
-function decrement() {
-  basket.actions.decrementItem(item);
-}
-
-function remove() {
-  basket.actions.removeItem(item);
-}
 
 
   if (item.sku.startsWith('--voucher--')) {
@@ -71,15 +60,13 @@ function remove() {
         )}
       </ItemInfo>
       <ItemAmount>
-        { !item.sku.startsWith('delivery') &&
-          <ItemQuantity>
-            {item.quantity} x{' '}
-            {t('price', {
-              value: item.price?.gross ?? 0,
-              currency: item.price?.currency
-            })}
-          </ItemQuantity>
-        }
+        <ItemQuantity>
+          {item.quantity} x{' '}
+          {t('price', {
+            value: item.price?.gross ?? 0,
+            currency: item.price?.currency
+          })}
+        </ItemQuantity>
         <ItemPrice>
           {t('price', {
             value: (item.price?.gross ?? 0) * item.quantity,
@@ -87,34 +74,11 @@ function remove() {
           })}
         </ItemPrice>
       </ItemAmount>
-      { !item.sku.startsWith('delivery') &&
-        <ItemQuantityChanger>
-          {item.quantity > 1 ?
-            <button
-                onClick={decrement}
-                type="button"
-              >
-                -
-              </button>
-            :
-            <button
-                onClick={remove}
-                type="button"
-              >
-                -
-              </button>
-          }
-            <ItemQuantity>{item.quantity}</ItemQuantity>
-            <button onClick={increment} type="button">
-              +
-            </button>
-          </ItemQuantityChanger>
-        }
     </Item>
   );
 }
 
-export default function OrderItems({ cart }) {
+export default function OrderItemsConfirmed({ cart }) {
   return (
     <Items>
       {cart.map((item) => (

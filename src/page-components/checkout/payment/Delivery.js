@@ -170,6 +170,10 @@ const willDeliverList = [
 
 export default function Delivery({ suburb, deliveryMethod, setDeliveryMethod }) {
 
+    const handleSelection = (e) => {
+        setDeliveryMethod(e.target.value)
+    }
+
     const isInTown = () => {
         return suburb.toLowerCase() === "benalla" ? true : false
     }
@@ -205,15 +209,15 @@ export default function Delivery({ suburb, deliveryMethod, setDeliveryMethod }) 
         return null
     } else {
         return (
-        <Wrapper onChange={e => setDeliveryMethod(e.target.value)}>
+        <Wrapper onChange={handleSelection}>
             <Row>
                 <Label htmlFor="collect">Collect in store - <b>FREE</b></Label>
                 <Radio 
                 type="radio" 
                 id='collect' 
                 name='deliverySelection' 
-                value={0}
-                checked={deliveryMethod == 0}
+                value='collect'
+                checked={deliveryMethod == 'collect'}
                 readOnly
                 />
             </Row>
@@ -225,8 +229,8 @@ export default function Delivery({ suburb, deliveryMethod, setDeliveryMethod }) 
                 type="radio" 
                 id='deliveryInTown' 
                 name='deliverySelection' 
-                value={10}
-                checked={deliveryMethod == 10}
+                value='deliveryInTown'
+                checked={deliveryMethod == 'deliveryInTown'}
                 readOnly
                 />
             </Row>
@@ -238,8 +242,8 @@ export default function Delivery({ suburb, deliveryMethod, setDeliveryMethod }) 
                 type="radio" 
                 id='deliveryOutsideTown' 
                 name='deliverySelection' 
-                value={15} 
-                checked={deliveryMethod == 15}
+                value='deliveryOutsideTown' 
+                checked={deliveryMethod == 'deliveryOutsideTown' }
                 readOnly
                 />
             </Row>

@@ -79,17 +79,48 @@ export default function Payment() {
   const [deliveryMethod, setDeliveryMethod] = useState(null)
 
   useEffect(() => {
-    actions.addDeliveryCost(deliveryMethod)
+    let { cart } = basketModel
+    let currentDeliveryMethod = cart.filter(product => product.sku.startsWith("delivery"))
+    
+    const removeAllDeliveryMethods = () => {
+      currentDeliveryMethod.map(product => {
+        actions.removeItem({
+          sku: product.sku,
+          path: "/deliveryfees/delivery",
+        })
+      })
+    }
+
+    if (currentDeliveryMethod) {
+      removeAllDeliveryMethods()
+    }
+
+    if (deliveryMethod === 'collect') {
+      actions.addItem({
+        sku: "delivery-pickup-from-shop",
+        path: "/deliveryfees/delivery",
+      });
+      return
+    }
+
+    if (deliveryMethod === "deliveryInTown") {
+      actions.addItem({
+        sku: "delivery-in-town",
+        path: "/deliveryfees/delivery",
+      });
+      return
+    }
+
+    if (deliveryMethod === "deliveryOutsideTown") {
+      actions.addItem({
+        sku: "delivery-outside-town",
+        path: "/deliveryfees/delivery",
+      });
+      return
+    }
+
   }, [deliveryMethod])
 
-  // tmp mockup for adding delivery
-  // function addDeliveryFee() {
-  //   basketModel.actions.addItem({
-  //     sku: "pickup-from-shop-1689318863217",
-  //     path: "/deliveryfees/delivery",
- 
-  //   });
-  // }
 
   const paymentConfig = useQuery('paymentConfig', () =>
     ServiceApi({
@@ -473,6 +504,7 @@ export default function Payment() {
       <PaymentProvider>
           <StripeCheckout
             checkoutModel={checkoutModel}
+            deliveryMethod={deliveryMethod}
             onSuccess={(crystallizeOrderId) => {
               router.push(
                 checkoutModel.confirmationURL.replace(
