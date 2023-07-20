@@ -1,191 +1,44 @@
 import styled from 'styled-components';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faCircleInfo } from "@fortawesome/free-solid-svg-icons"
 
-import { format } from 'date-fns'
+import { format, getDay, add } from 'date-fns'
 import { enGB } from 'date-fns/locale'
 import { DatePickerCalendar } from 'react-nice-dates'
 import 'react-nice-dates/build/style.css'
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
-const willDeliverList = [
-    "arcadia",
-    "arcadia south",
-    "cosgrove",
-    "cosgrove south",
-    "grahamvale",
-    "karramomus",
-    "kialla",
-    "kialla east",
-    "kialla west",
-    "lemnos",
-    "orrvale",
-    "pine lodge",
-    "shepparton east",
-    "shepparton north",
-    "tamleugh west",
-    "dookie",
-    "mount major",
-    "nalinga",
-    "waggarandall",
-    "wattville",
-    "yabba north",
-    "yabba south",
-    "youanmite",
-    "balmattum",
-    "creighton",
-    "creightons creek",
-    "euroa",
-    "gooram",
-    "kelvin view",
-    "kithbrook",
-    "miepoll",
-    "moglonemby",
-    "molka",
-    "riggs creek",
-    "ruffy",
-    "sheans creek",
-    "strathbogie",
-    "tarcombe",
-    "boho",
-    "boho south",
-    "creek junction",
-    "earlston",
-    "gowangardie",
-    "koonda",
-    "marraweeney",
-    "tamleugh",
-    "tamleugh north",
-    "upotipotpon",
-    "violet town",
-    "baddaginnie",
-    "tarnook",
-    "warrenbayne",
-    "broken creek",
-    "goomalibee",
-    "kilfeera",
-    "lake mokoan",
-    "lima",
-    "lima east",
-    "lima south",
-    "lurg",
-    "molyullah",
-    "moorngag",
-    "samaria",
-    "swanpool",
-    "tatong",
-    "upotipotpon",
-    "upper lurg",
-    "upper ryans creek",
-    "winton",
-    "winton north",
-    "boweya",
-    "boweya north",
-    "glenrowan",
-    "glenrowan west",
-    "greta",
-    "greta south",
-    "greta west",
-    "hansonville",
-    "mount bruno",
-    "taminick",
-    "appin park",
-    "wangaratta",
-    "wangaratta west",
-    "yarrunga",
-    "bobinawarrah",
-    "boorhaman",
-    "boorhaman east",
-    "bowser",
-    "byawatha",
-    "carboor",
-    "cheshunt",
-    "cheshunt south",
-    "docker",
-    "dockers plains",
-    "east wangaratta",
-    "edi",
-    "edi upper",
-    "everton",
-    "everton upper",
-    "killawarra",
-    "king valley",
-    "laceby",
-    "londrigan",
-    "markwood",
-    "meadow creek",
-    "milawa",
-    "north wangaratta",
-    "oxley",
-    "oxley flats",
-    "peechelba",
-    "peechelba east",
-    "rose river",
-    "tarrawingee",
-    "wabonga",
-    "waldara",
-    "wangandary",
-    "wangaratta forward",
-    "wangaratta south",
-    "whitlands",
-    "archerton",
-    "barjarg",
-    "boorolite",
-    "bridge creek",
-    "delatite",
-    "gaffneys creek",
-    "goughs bay",
-    "howes creek",
-    "howqua",
-    "howqua hills",
-    "howqua inlet",
-    "jamieson",
-    "kevington",
-    "macs cove",
-    "maindample",
-    "matlock",
-    "merrijig",
-    "mount buller",
-    "mountain bay",
-    "nillahcootie",
-    "piries",
-    "sawmill settlement",
-    "tolmie",
-    "woods point",
-    "boxwood",
-    "chesney vale",
-    "goorambat",
-    "major plains",
-    "stewarton",
-    "bungeet",
-    "bungeet west",
-    "devenish",
-    "thoona",
-    "almonds",
-    "lake rowan",
-    "pelluebla",
-    "st james",
-    "waggarandall",
-    "yundool",
-    "boomahnoomoonah",
-    "tungamah",
-    "wilby",
-    "youarang",
-    "moyhu",
-    "myrrhee",
-    "whitfield"
-];
+const listOfDeliveryPostcodes = ["3677", "3669", "3666", "3630"];
 
-export default function Delivery({ suburb, deliveryMethod, setDeliveryMethod, isReadyForStripe, setDeliveryAddress, deliveryAddress }) {
+const calendarModifiers = {
+    disabled: date => getDay(date) === 0, // Disables Sunday
+    highlight: date => getDay(date) === 2 // Highlights Tuesdays
+}
+
+const tomorrow = add(new Date(), {
+    days: 1,
+  });
+
+
+export default function Delivery({ postcode, deliveryMethod, setDeliveryMethod, isReadyForStripe, setDeliveryAddress }) {
     const [date, setDate] = useState()
+
+    useEffect(() => {
+        setDeliveryAddress((deliveryAddress) => {
+            return { ...deliveryAddress, deliveryDate: date }
+        })
+    }, [date])
+
     const handleDeliverySelection = (e) => {
         setDeliveryMethod(e.target.value)
     }
  
     const isInTown = () => {
-        return suburb.toLowerCase() === "benalla" ? true : false
+        return postcode == "3672" ? true : false
     }
 
     const isOutsideTown = () => {
-        return willDeliverList.includes(suburb.toLowerCase()) ? true : false
+        return listOfDeliveryPostcodes.includes(postcode) ? true : false
     }
 
     const Row = styled.div`
@@ -194,16 +47,29 @@ export default function Delivery({ suburb, deliveryMethod, setDeliveryMethod, is
     align-items: center;
     margin-bottom: 15px;
     background: white;
-    height: 2rem;
-    padding: 5%;
+    font-size: 1rem;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    padding: 15px 15px;
     `;
 
     const Wrapper = styled.div`
         padding-right: 15px;
+        margin-bottom: 15px;
     `;
 
     const Label = styled.label`
     font-size: 1rem;
+    `
+
+    const DateHeading = styled.span`
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    font-size: 1rem;
+        @media only screen and (max-width: 768px) {
+        margin: 0 10px;
+        }
     `
 
     const Radio = styled.input`
@@ -211,7 +77,16 @@ export default function Delivery({ suburb, deliveryMethod, setDeliveryMethod, is
     height: 1.4rem;
     `
 
-    if (!suburb) {
+    const DateWrapper = styled.div`
+        display: flex;
+        flex-direction: column;
+        text-align: center;
+        width: 100%;
+        margin: 30px 0;
+        gap: 10px;
+    `
+
+    if (!postcode) {
         return (
             <Wrapper>
                 <span>Please enter a valid address to calculate delivery</span>
@@ -221,6 +96,7 @@ export default function Delivery({ suburb, deliveryMethod, setDeliveryMethod, is
         return (
         <Wrapper onChange={handleDeliverySelection}>
             <Row>
+                <FontAwesomeIcon icon={faCircleInfo} width={20} height={20} />
                 <Label htmlFor="collect">Collect in store - <b>FREE</b></Label>
                 <Radio 
                 type="radio" 
@@ -235,6 +111,7 @@ export default function Delivery({ suburb, deliveryMethod, setDeliveryMethod, is
 
             {isInTown() &&
             <Row>
+                <FontAwesomeIcon icon={faCircleInfo} width={20} height={20} />
                 <Label htmlFor="deliveryInTown">Delivery in Benalla - <b>$10</b></Label>
                 <Radio 
                 type="radio" 
@@ -249,7 +126,10 @@ export default function Delivery({ suburb, deliveryMethod, setDeliveryMethod, is
             }
             {isOutsideTown() &&
             <Row>
-                <Label htmlFor="deliveryOutsideTown">Delivery outside of Benalla - <b>$15</b></Label>
+                <FontAwesomeIcon icon={faCircleInfo} width={20} height={20} />
+                <Label htmlFor="deliveryOutsideTown">
+                Delivery outside of Benalla - <b>$20</b>
+                </Label>
                 <Radio 
                 type="radio" 
                 id='deliveryOutsideTown' 
@@ -261,22 +141,20 @@ export default function Delivery({ suburb, deliveryMethod, setDeliveryMethod, is
                 />
             </Row>
             }
-            <br />
-            <Label><b>Delivery Date:</b> {date ? format(date, 'dd MMM yyyy', { locale: enGB }) : 'none'}</Label>
-            <DatePickerCalendar date={date} onDateChange={setDate} locale={enGB} />
-      
             
-            {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DemoItem label="Please select a delivery/collection date">
-                    <MobileDatePicker 
-                    
-                        shouldDisableDate={isSunday}
-                        disablePast
-                        // onChange={(newValue) => setDeliveryAddress({ ...deliveryAddress, deliveryDate: newValue.$d })}
-                    />
-                    </DemoItem>
-            </LocalizationProvider>   */}
-            <br />        
+            <DateWrapper>
+                <DateHeading>
+                    <FontAwesomeIcon icon={faCircleInfo} width={15} height={15} />
+                    <b> Request Delivery Date:</b> {date ? format(date, 'dd MMM yyyy', { locale: enGB }) : 'none'}
+                </DateHeading>
+                <DatePickerCalendar 
+                    date={date} 
+                    onDateChange={setDate} 
+                    locale={enGB}
+                    modifiers={calendarModifiers}
+                    minimumDate={tomorrow}
+                />
+            </DateWrapper>    
         </Wrapper>
         )
     }

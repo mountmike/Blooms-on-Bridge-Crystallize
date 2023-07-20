@@ -461,12 +461,11 @@ export default function Payment() {
       <SectionHeader>{('Delivery Options')}</SectionHeader>
       <CheckoutFormGroup>
         <Delivery 
-        suburb={deliveryAddress.suburb}
+        postcode={deliveryAddress.postcode}
         deliveryMethod={deliveryMethod}
         setDeliveryMethod={setDeliveryMethod}
         isReadyForStripe={isReadyForStripe}
         setDeliveryAddress={setDeliveryAddress}
-        deliveryAddress={deliveryAddress}
         />
       </CheckoutFormGroup>
 
