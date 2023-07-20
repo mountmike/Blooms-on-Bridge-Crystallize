@@ -167,3 +167,10 @@ export const Container = styled.div`
 export const PaymentWrapper = styled.div`
   background: white
 `
+
+export const FootNote = styled.p`
+  font-size: .7rem;
+  font-weight: normal;
+  text-transform: none;
+  margin: 5px 0;
+`

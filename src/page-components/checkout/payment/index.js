@@ -29,7 +29,8 @@ import {
   PaymentProvider,
   SectionHeader,
   CheckoutFormGroup,
-  ErrorMessage
+  ErrorMessage,
+  FootNote
 } from '../styles';
 import { Button } from 'ui';
 import Voucher from '../voucher';
@@ -84,7 +85,6 @@ export default function Payment() {
   const [isReadyForStripe, setIsReadyForStripe] = useState(false)
 
   useEffect(() => {
-    console.log(deliveryAddress);
     let { cart } = basketModel
     let currentDeliveryMethod = cart.filter(product => product.sku.startsWith("delivery"))
     
@@ -125,7 +125,7 @@ export default function Payment() {
       return
     }
 
-  }, [deliveryMethod, deliveryAddress])
+  }, [deliveryMethod])
 
   const paymentConfig = useQuery('paymentConfig', () =>
     ServiceApi({
@@ -160,7 +160,7 @@ export default function Payment() {
   }
 
   const { firstName, lastName, email, phone } = state;
-  const { unitNumber, streetNumber, streetName, suburb, territory, postcode } = deliveryAddress
+  const { unitNumber, streetNumber, streetName, suburb, territory, postcode, deliveryDate } = deliveryAddress
 
   const [error, setError] = useState("")
   const handleStripeForm = () => {
@@ -186,11 +186,20 @@ export default function Payment() {
     customer: {
       firstName,
       lastName,
+      deliveryDate,
       addresses: [
         {
           type: 'billing',
-          email: email || null,
-        }
+          email,
+          phone,
+          unitNumber,
+          streetNumber,
+          streetName,
+          suburb,
+          territory,
+          postcode,
+          deliveryDate: String(deliveryDate)
+        },
       ]
     },
     confirmationURL: getURL(`/confirmation/{crystallizeOrderId}?emptyBasket`),
@@ -458,7 +467,11 @@ export default function Payment() {
         </form>
       </CheckoutFormGroup>
 
-      <SectionHeader>{('Delivery Options')}</SectionHeader>
+      <SectionHeader>
+        {('Delivery Options')}
+        <FootNote>We can deliver to Benalla, Wangaratta, Shepperton, Violet Town, Euroa & Mansfield.</FootNote>
+        <FootNote>If you are outside of these towns, give us a call for possible options.</FootNote>
+      </SectionHeader>
       <CheckoutFormGroup>
         <Delivery 
         postcode={deliveryAddress.postcode}

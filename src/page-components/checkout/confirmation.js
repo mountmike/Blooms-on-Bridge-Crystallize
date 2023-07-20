@@ -98,7 +98,7 @@ export default function Confirmation({ order }) {
           <Line />
           <BillingDetails order={order} />
           <Line />
-          <H3>{t('order:item', { count: cart.length })}</H3>
+          <H3>{t('order:Items', { count: cart.length })}</H3>
           <OrderItemsConfirmed cart={cart} />
           <Totals>
             <TotalLine bold>

@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import styles from './delivery.module.css'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faCircleInfo } from "@fortawesome/free-solid-svg-icons"
 
@@ -8,24 +9,25 @@ import { DatePickerCalendar } from 'react-nice-dates'
 import 'react-nice-dates/build/style.css'
 import { useEffect, useState } from 'react';
 
-const listOfDeliveryPostcodes = ["3677", "3669", "3666", "3630"];
+const listOfDeliveryPostcodes = ["3677", "3669", "3666", "3630", "3722"];
 
 const calendarModifiers = {
     disabled: date => getDay(date) === 0, // Disables Sunday
-    highlight: date => getDay(date) === 2 // Highlights Tuesdays
+    highlight: date => getDay(date) === 2 // Highlights Tuesday
 }
 
 const tomorrow = add(new Date(), {
     days: 1,
-  });
+});
 
 
 export default function Delivery({ postcode, deliveryMethod, setDeliveryMethod, isReadyForStripe, setDeliveryAddress }) {
     const [date, setDate] = useState()
 
     useEffect(() => {
+        const shortDate = date ? format(date, 'dd MMM yyyy', { locale: enGB }) : "none"
         setDeliveryAddress((deliveryAddress) => {
-            return { ...deliveryAddress, deliveryDate: date }
+            return { ...deliveryAddress, deliveryDate: shortDate }
         })
     }, [date])
 
@@ -86,6 +88,7 @@ export default function Delivery({ postcode, deliveryMethod, setDeliveryMethod, 
         gap: 10px;
     `
 
+
     if (!postcode) {
         return (
             <Wrapper>
@@ -96,7 +99,12 @@ export default function Delivery({ postcode, deliveryMethod, setDeliveryMethod, 
         return (
         <Wrapper onChange={handleDeliverySelection}>
             <Row>
-                <FontAwesomeIcon icon={faCircleInfo} width={20} height={20} />
+                <div className={styles.tooltipContainer}>
+                    <FontAwesomeIcon icon={faCircleInfo} width={20} height={20} />
+                    <div className={styles.tooltipText}>
+                        <span>Pickup from our shop in Benalla</span>
+                    </div>
+                </div>
                 <Label htmlFor="collect">Collect in store - <b>FREE</b></Label>
                 <Radio 
                 type="radio" 
@@ -111,7 +119,12 @@ export default function Delivery({ postcode, deliveryMethod, setDeliveryMethod, 
 
             {isInTown() &&
             <Row>
-                <FontAwesomeIcon icon={faCircleInfo} width={20} height={20} />
+                <div className={styles.tooltipContainer}>
+                    <FontAwesomeIcon icon={faCircleInfo} width={20} height={20} />
+                    <div className={styles.tooltipText}>
+                        <span>Delivery within the township of Benalla.</span>
+                    </div>
+                </div>
                 <Label htmlFor="deliveryInTown">Delivery in Benalla - <b>$10</b></Label>
                 <Radio 
                 type="radio" 
@@ -126,7 +139,12 @@ export default function Delivery({ postcode, deliveryMethod, setDeliveryMethod, 
             }
             {isOutsideTown() &&
             <Row>
-                <FontAwesomeIcon icon={faCircleInfo} width={20} height={20} />
+                <div className={styles.tooltipContainer}>
+                    <FontAwesomeIcon icon={faCircleInfo} width={20} height={20} />
+                    <div className={styles.tooltipText}>
+                        <span>Delivery to towns in the region subject to courier availability</span>
+                    </div>
+                </div>
                 <Label htmlFor="deliveryOutsideTown">
                 Delivery outside of Benalla - <b>$20</b>
                 </Label>
@@ -144,7 +162,12 @@ export default function Delivery({ postcode, deliveryMethod, setDeliveryMethod, 
             
             <DateWrapper>
                 <DateHeading>
-                    <FontAwesomeIcon icon={faCircleInfo} width={15} height={15} />
+                    <div className={styles.tooltipContainer}>
+                        <FontAwesomeIcon icon={faCircleInfo} width={15} height={15} />
+                        <div className={styles.tooltipText}>
+                            <span>We try out best but cannot always guarantee exact delivery dates</span>
+                        </div>
+                    </div>
                     <b> Request Delivery Date:</b> {date ? format(date, 'dd MMM yyyy', { locale: enGB }) : 'none'}
                 </DateHeading>
                 <DatePickerCalendar 
@@ -153,6 +176,7 @@ export default function Delivery({ postcode, deliveryMethod, setDeliveryMethod, 
                     locale={enGB}
                     modifiers={calendarModifiers}
                     minimumDate={tomorrow}
+                    format='dd MMM yyyy'
                 />
             </DateWrapper>    
         </Wrapper>
