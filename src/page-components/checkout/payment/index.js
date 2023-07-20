@@ -322,7 +322,7 @@ export default function Payment() {
   return (
     <Inner>
       <CheckoutFormGroup>
-        <SectionHeader>{t('title')}</SectionHeader>
+        <SectionHeader>Billing Details</SectionHeader>
         <form noValidate>
           <Row>
             <InputGroup>

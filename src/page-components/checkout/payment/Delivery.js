@@ -29,7 +29,10 @@ export default function Delivery({ postcode, deliveryMethod, setDeliveryMethod, 
     const [publicHolidays, setPublicHolidays] = useState(null)
 
     useEffect(() => {
-        const url = `https://wovg-community.gateway.prod.api.vic.gov.au/vicgov/v2.0/dates?type=PUBLIC_HOLIDAY&from_date=${"2023-07-01"}&to_date=${"2024-07-01"}&format=json`
+        const baseDate = new Date()
+        const fromDate = new Date().toISOString().split('T')[0]
+        const toDate = new Date(baseDate.setDate(baseDate.getDate() + 90)).toISOString().split('T')[0]
+        const url = `https://wovg-community.gateway.prod.api.vic.gov.au/vicgov/v2.0/dates?type=PUBLIC_HOLIDAY&from_date=${fromDate}&to_date=${toDate}&format=json`
 
         const config = {
             headers:{
@@ -46,13 +49,14 @@ export default function Delivery({ postcode, deliveryMethod, setDeliveryMethod, 
             return date.toString()
         })))
 
-    }, [date])
+    }, [])
 
     useEffect(() => {
         const shortDate = date ? format(date, 'dd MMM yyyy', { locale: enGB }) : "none"
         setDeliveryAddress((deliveryAddress) => {
             return { ...deliveryAddress, deliveryDate: shortDate }
         })
+
     }, [date])
 
     const calendarModifiers = {
