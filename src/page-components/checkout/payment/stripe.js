@@ -74,8 +74,8 @@ function Form({ stripeClientSecret, checkoutModel, onSuccess, onError }) {
               paymentIntentId: paymentIntent.id
             }
           });
-          console.log(paymentIntent);
-          console.log(response);
+          // console.log(paymentIntent);
+          // console.log(response);
           const {
             success,
             orderId

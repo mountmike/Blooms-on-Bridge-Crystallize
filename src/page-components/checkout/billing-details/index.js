@@ -24,13 +24,13 @@ const Inner = styled.div`
 `;
 
 const BillingDetails = ({ order }) => {
-  const [isDelivery, setIsDelivery] = useState(false)
+  const [isDelivery, setIsDelivery] = useState(true)
 
   useEffect(() => {
     if (order.cart.filter(product => product.sku === "delivery-pickup-from-shop")) {
-      setIsDelivery(true)
+      setIsDelivery(false)
     }
-  }, [order])
+  }, [])
 
   const { t } = useTranslation('customer');
   const { email } = order.customer.addresses?.[0] || {};

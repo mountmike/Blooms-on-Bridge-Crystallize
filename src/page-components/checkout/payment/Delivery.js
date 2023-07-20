@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import styles from './delivery.module.css'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faCircleInfo } from "@fortawesome/free-solid-svg-icons"
-
+import axios from 'axios';
 import { format, getDay, add } from 'date-fns'
 import { enGB } from 'date-fns/locale'
 import { DatePickerCalendar } from 'react-nice-dates'
@@ -10,19 +10,43 @@ import 'react-nice-dates/build/style.css'
 import { useEffect, useState } from 'react';
 
 const listOfDeliveryPostcodes = ["3677", "3669", "3666", "3630", "3722"];
+const listOfMothersDays = [
+    "Sun May 12 2024 00:00:00 GMT+1000 (Australian Eastern Standard Time)",
+    "Sun May 11 2025 00:00:00 GMT+1000 (Australian Eastern Standard Time)",
+    "Sun May 10 2026 00:00:00 GMT+1000 (Australian Eastern Standard Time)",
+    "Sun May 09 2027 00:00:00 GMT+1000 (Australian Eastern Standard Time)",
+    "Sun May 14 2028 00:00:00 GMT+1000 (Australian Eastern Standard Time)",
+    "Sun May 13 2029 00:00:00 GMT+1000 (Australian Eastern Standard Time)",
+    "Sun May 12 2030 00:00:00 GMT+1000 (Australian Eastern Standard Time)",
+    "Sun May 11 2031 00:00:00 GMT+1000 (Australian Eastern Standard Time)",
+    "Sun May 19 2032 00:00:00 GMT+1000 (Australian Eastern Standard Time)"
+]
 
-const calendarModifiers = {
-    disabled: date => getDay(date) === 0, // Disables Sunday
-    highlight: date => getDay(date) === 2 // Highlights Tuesday
-}
-
-const tomorrow = add(new Date(), {
-    days: 1,
-});
 
 
 export default function Delivery({ postcode, deliveryMethod, setDeliveryMethod, isReadyForStripe, setDeliveryAddress }) {
     const [date, setDate] = useState()
+    const [publicHolidays, setPublicHolidays] = useState(null)
+
+    useEffect(() => {
+        const url = `https://wovg-community.gateway.prod.api.vic.gov.au/vicgov/v2.0/dates?type=PUBLIC_HOLIDAY&from_date=${"2023-07-01"}&to_date=${"2024-07-01"}&format=json`
+
+        const config = {
+            headers:{
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+                "apikey": process.env.NEXT_PUBLIC_VIC_IMPORTANT_DATES_KEY
+            }
+        };
+
+        axios.get(url, config)
+        .then(res => setPublicHolidays(res.data.dates.map(el => {
+            let date = new Date(el.date)
+            date.setHours(0,0,0,0)
+            return date.toString()
+        })))
+
+    }, [date])
 
     useEffect(() => {
         const shortDate = date ? format(date, 'dd MMM yyyy', { locale: enGB }) : "none"
@@ -30,6 +54,23 @@ export default function Delivery({ postcode, deliveryMethod, setDeliveryMethod, 
             return { ...deliveryAddress, deliveryDate: shortDate }
         })
     }, [date])
+
+    const calendarModifiers = {
+        disabled: function (date) {
+            let dateString = date.toString()
+            // disable all sundays accept mothers day
+            if (getDay(date) === 0 && !listOfMothersDays.includes(dateString)) {
+                return true
+            }
+            // disable public holidays
+            if (publicHolidays.includes(dateString)) {
+                return true
+            }
+        } 
+    }
+    
+    const tomorrow = add(new Date(), { days: 1,});
+    const maxDate = add(new Date(), { days: 90,});
 
     const handleDeliverySelection = (e) => {
         setDeliveryMethod(e.target.value)
@@ -142,7 +183,7 @@ export default function Delivery({ postcode, deliveryMethod, setDeliveryMethod, 
                 <div className={styles.tooltipContainer}>
                     <FontAwesomeIcon icon={faCircleInfo} width={20} height={20} />
                     <div className={styles.tooltipText}>
-                        <span>Delivery to towns in the region subject to courier availability</span>
+                        <span>Delivery to towns outside Benalla subject to courier availability</span>
                     </div>
                 </div>
                 <Label htmlFor="deliveryOutsideTown">
@@ -165,7 +206,7 @@ export default function Delivery({ postcode, deliveryMethod, setDeliveryMethod, 
                     <div className={styles.tooltipContainer}>
                         <FontAwesomeIcon icon={faCircleInfo} width={15} height={15} />
                         <div className={styles.tooltipText}>
-                            <span>We try out best but cannot always guarantee exact delivery dates</span>
+                            <span>We try out best but cannot always guarantee exact delivery dates. If we can't make the requested date, delivery will be made the following business day.</span>
                         </div>
                     </div>
                     <b> Request Delivery Date:</b> {date ? format(date, 'dd MMM yyyy', { locale: enGB }) : 'none'}
@@ -176,6 +217,7 @@ export default function Delivery({ postcode, deliveryMethod, setDeliveryMethod, 
                     locale={enGB}
                     modifiers={calendarModifiers}
                     minimumDate={tomorrow}
+                    maximumDate={maxDate}
                     format='dd MMM yyyy'
                 />
             </DateWrapper>    
