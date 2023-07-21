@@ -30,7 +30,8 @@ import {
   SectionHeader,
   CheckoutFormGroup,
   ErrorMessage,
-  FootNote
+  FootNote,
+  TextArea
 } from '../styles';
 import { Button } from 'ui';
 import Voucher from '../voucher';
@@ -49,22 +50,9 @@ const Row = styled.div`
 const Inner = styled.div``;
 
 export default function Payment() {
-  React.useEffect(() => {
-    // Check to see if this is a redirect back from Checkout
-    const query = new URLSearchParams(window.location.search);
-    if (query.get('success')) {
-      console.log('Order placed! You will receive an email confirmation.');
-    }
-
-    if (query.get('canceled')) {
-      console.log('Order canceled -- continue to shop around and checkout when you’re ready.');
-    }
-  }, []);
-
   const { t } = useTranslation(['checkout', 'customer']);
   const router = useRouter();
   const { basketModel, actions } = useBasket();
-
   // const [selectedPaymentProvider, setSelectedPaymentProvider] = useState(null);
   const [customer, setCustomer] = useState({
     firstName: '',
@@ -72,6 +60,7 @@ export default function Payment() {
     email: '',
     phone: '',
     notes: '',
+    deliveryDate: '',
     addresses: [
       {
         type: 'billing',
@@ -94,12 +83,23 @@ export default function Payment() {
         suburb: '',
         territory: '',
         postcode: '',
-        deliveryDate: ''
       },
     ]
   });
   const [deliveryMethod, setDeliveryMethod] = useState(null)
   const [isReadyForStripe, setIsReadyForStripe] = useState(false)
+
+  useEffect(() => {
+    // Check to see if this is a redirect back from Checkout
+    const query = new URLSearchParams(window.location.search);
+    if (query.get('success')) {
+      console.log('Order placed! You will receive an email confirmation.');
+    }
+
+    if (query.get('canceled')) {
+      console.log('Order canceled -- continue to shop around and checkout when you’re ready.');
+    }
+  }, []);
 
   useEffect(() => {
     let { cart } = basketModel
@@ -144,6 +144,7 @@ export default function Payment() {
 
   }, [deliveryMethod])
 
+
   const handleFormInput = (e) => {
     const newCustomer = {...customer}
     const form = e.target.closest("form")
@@ -156,17 +157,13 @@ export default function Payment() {
     if (form.name === "customer") {
       newCustomer[name] = value
       setCustomer(newCustomer)
-      console.log(customer);
     }
 
     if (form.name === "delivery") {
       newCustomer.addresses[1][name] = value
       setCustomer(newCustomer)
-      console.log(customer);
     }
 
-    console.log(customer);
-    
   }
 
   const paymentConfig = useQuery('paymentConfig', () =>
@@ -201,7 +198,7 @@ export default function Payment() {
     multilingualUrlPrefix = '/' + router.locale;
   }
 
-  const { firstName, lastName, email, phone } = customer;
+  const { firstName, lastName, email, phone, notes, deliveryDate } = customer;
   const deliveryAddress = customer.addresses[1]
 
   const [error, setError] = useState("")
@@ -234,17 +231,32 @@ export default function Payment() {
    * It contains everything needed to make a purchase and complete
    * an order
    */
+  const isDelivery = deliveryMethod?.startsWith("delivery")
   const checkoutModel = {
     basketModel,
     customer: {
       firstName,
       lastName,
-      deliveryDate: "line 237 of payment index",
+      email,
+      phone,
+      notes,
+      deliveryDate,
       addresses: [
         {
           type: 'billing',
           email,
           phone,
+        },
+        {
+          type: 'delivery',
+          email: isDelivery ? deliveryAddress.email : null,
+          phone: deliveryAddress.phone,
+          unitNumber: deliveryAddress.unitNumber,
+          streetNumber: deliveryAddress.streetNumber,
+          streetName: isDelivery ? deliveryAddress.streetName : "IN STORE PICKUP",
+          suburb: deliveryAddress.suburb,
+          territory: deliveryAddress.territory,
+          postcode: deliveryAddress.postcode,
         },
       ]
     },
@@ -412,6 +424,17 @@ export default function Payment() {
               />
             </InputGroup>
           </Row>
+          <Row>
+            <InputGroup>
+              <Label htmlFor="notes">extra details</Label>
+              <TextArea
+                name="notes"
+                type="text"
+                defaultValue={customer.notes}
+                maxlength="50"
+              />
+            </InputGroup>
+          </Row>
         </form>
       </CheckoutFormGroup>
 
@@ -547,7 +570,6 @@ export default function Payment() {
           setCustomer={setCustomer}
           />
         </CheckoutFormGroup>
-
 
       {/* <Voucher /> */}
       {/* <CheckoutFormGroup withUpperMargin>

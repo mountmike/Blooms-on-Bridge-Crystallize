@@ -25,8 +25,6 @@ const listOfMothersDays = [
     "Sun May 19 2032 00:00:00 GMT+1000 (Australian Eastern Standard Time)"
 ]
 
-
-
 export default function Delivery({ postcode, deliveryMethod, setDeliveryMethod, isReadyForStripe, setCustomer }) {
     const [displayDeliveryChoice, setDisplayDeliveryChoice] = useState(true)
     const [date, setDate] = useState()
@@ -55,11 +53,13 @@ export default function Delivery({ postcode, deliveryMethod, setDeliveryMethod, 
 
     }, [])
 
-    // useEffect(() => {
-    //     const shortDate = date ? format(date, 'dd MMM yyyy', { locale: enGB }) : "none"
-    //     setCustomer({...})
+    useEffect(() => {
+        const shortDate = date ? format(date, 'dd MMM yyyy', { locale: enGB }) : "none"
+        setCustomer(customer => {
+            return {...customer, deliveryDate: date?.toLocaleDateString('en-GB')}
+        })
 
-    // }, [date])
+    }, [date])
 
     const calendarModifiers = {
         disabled: function (date) {
@@ -83,6 +83,7 @@ export default function Delivery({ postcode, deliveryMethod, setDeliveryMethod, 
 
         if (e.target.closest("button")?.name === "collect") {
             setDeliveryMethod("collect")
+
         } else if (e.target.closest("button")?.name === "deliver") {
             setDeliveryMethod("delivery")
         } else {
@@ -109,7 +110,6 @@ export default function Delivery({ postcode, deliveryMethod, setDeliveryMethod, 
     margin-bottom: 0.5rem;
     padding: 15px 15px;
     `;
-
 
     const Wrapper = styled.div`
         padding-right: 15px;
@@ -151,8 +151,6 @@ export default function Delivery({ postcode, deliveryMethod, setDeliveryMethod, 
         margin: 30px 0;
         gap: 10px;
     `
-
-
 
     return (
         <>
@@ -233,7 +231,7 @@ export default function Delivery({ postcode, deliveryMethod, setDeliveryMethod, 
                 <div className={styles.tooltipContainer}>
                     <FontAwesomeIcon icon={faCircleInfo} width={20} height={20} />
                     <div className={styles.tooltipText}>
-                        <span>Delivery to towns outside Benalla subject to courier availability</span>
+                        <span>Delivery to towns outside Benalla subject to courier availability and will occur on weekdays only, as our couriers do not work on weekends</span>
                     </div>
                 </div>
                 <Label htmlFor="deliveryOutsideTown">

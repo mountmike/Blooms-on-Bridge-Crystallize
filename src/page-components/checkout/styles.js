@@ -62,6 +62,40 @@ export const Input = styled.input`
   }
 `;
 
+export const TextArea = styled.textarea`
+  background: var(--color-main-background);
+  border-bottom: 1px solid var(--color-box-background);
+  border: none;
+  color: var(--color-text-sub);
+  font-size: 1rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  padding: 15px 15px;
+  transition: border 0.2s ease-in-out;
+  width: 100%;
+  height: 10rem;
+  resize: none;
+  font: var(--font-family-main);
+
+  &::placeholder {
+    font-size: 12px;
+    opacity: 0.5;
+    padding-left: 10px;
+  }
+
+  &:valid {
+    border-bottom: 1px solid #b7e2e4;
+  }
+
+  &:invalid {
+    border-bottom: 1px solid var(--color-error);
+  }
+
+  &[value=''] {
+    border-bottom: 1px solid var(--color-box-background);
+  }
+`;
+
 export const ErrorMessage = styled.p`
   color: var(--color-error);
   font-size: 14px;

@@ -24,22 +24,21 @@ const Inner = styled.div`
 `;
 
 const BillingDetails = ({ order }) => {
-  const [isDelivery, setIsDelivery] = useState(true)
+  const [isPickup, setIsPickup] = useState(false)
 
   useEffect(() => {
-    if (order.cart.filter(product => product.sku === "delivery-pickup-from-shop")) {
-      setIsDelivery(false)
+    if (order.cart.filter(product => product.sku === "delivery-pickup-from-shop").length > 0) {
+      setIsPickup(true)
     }
-  }, [])
+  }, [order])
 
   const { t } = useTranslation('customer');
   const { email } = order.customer.addresses?.[0] || {};
   const { phone } = order.customer.addresses?.[0] || {};
-  const address = order.customer.addresses[0] || {};
+  const address = order.customer.addresses[1] || {};
   const deliveryDate = order.customer.addresses?.[1].phone || "none";
   const addressString = `${address.street ? address.street : ""} ${address.street2} ${address.city} ${address.state}` || "none";
   const customerNotes = order.meta || "none"
-
 
   return (
     <Outer>
@@ -57,20 +56,21 @@ const BillingDetails = ({ order }) => {
         <p>
           {t('phone')}: <strong>{phone}</strong>
         </p>
-        <p>
-          {t('notes')}: <strong>{customerNotes}</strong>
-        </p>
         
       </Inner>
-      { isDelivery ?
+      { isPickup ?
+      <Inner>
+      <H3>Pickup Details</H3>
+      <p>
+        {t('Shop Address')}:{' '}
+        <strong>
+        15 Bridge Street, Benalla, Victoria, 3672
+        </strong>
+      </p>
+    </Inner>
+      :
       <Inner>
         <H3>Delivery Details</H3>
-        <p>
-          {t('requested delivery date')}:{' '}
-          <strong>
-            {deliveryDate}
-          </strong>
-        </p>
         <p>
           {t('address')}:{' '}
           <strong>
@@ -78,22 +78,7 @@ const BillingDetails = ({ order }) => {
           </strong>
         </p>
       </Inner>
-      :
-      <Inner>
-        <H3>Pickup Details</H3>
-        <p>
-          {t('Requested pickup date')}:{' '}
-          <strong>
-            {deliveryDate}
-          </strong>
-        </p>
-        <p>
-          {t('Shop Address')}:{' '}
-          <strong>
-          15 Bridge Street, Benalla, Victoria, 3672
-          </strong>
-        </p>
-      </Inner>
+      
       }
     </Outer>
   );
