@@ -66,12 +66,39 @@ export default function Payment() {
   const { basketModel, actions } = useBasket();
 
   // const [selectedPaymentProvider, setSelectedPaymentProvider] = useState(null);
-  const [state, setState] = useState({
+  const [customer, setCustomer] = useState({
     firstName: '',
     lastName: '',
     email: '',
-    phone: ''
+    phone: '',
+    notes: '',
+    addresses: [
+      {
+        type: 'billing',
+        email: '',
+        phone: '',
+        unitNumber: '',
+        streetNumber: '',
+        streetName: '',
+        suburb: '',
+        territory: '',
+        postcode: ''
+      },
+      {
+        type: 'delivery',
+        email: '',
+        phone: '',
+        unitNumber: '',
+        streetNumber: '',
+        streetName: '',
+        suburb: '',
+        territory: '',
+        postcode: '',
+        deliveryDate: ''
+      },
+    ]
   });
+
   const [deliveryAddress, setDeliveryAddress] = useState({
     unitNumber: '',
     streetNumber: '',
@@ -127,6 +154,31 @@ export default function Payment() {
 
   }, [deliveryMethod])
 
+  const handleFormInput = (e) => {
+    const newCustomer = {...customer}
+    const form = e.target.closest("form")
+    const { value, name } = e.target
+
+    if (e.target.id === "addressSearch") {
+      return
+    }
+
+    if (form.name === "customer") {
+      newCustomer[name] = value
+      setCustomer(newCustomer)
+      console.log(customer);
+    }
+
+    if (form.name === "billing") {
+      newCustomer.addresses[0][name] = value
+      setCustomer(newCustomer)
+      console.log(customer);
+    }
+
+    console.log(customer);
+    
+  }
+
   const paymentConfig = useQuery('paymentConfig', () =>
     ServiceApi({
       query: `
@@ -159,8 +211,8 @@ export default function Payment() {
     multilingualUrlPrefix = '/' + router.locale;
   }
 
-  const { firstName, lastName, email, phone } = state;
-  const { unitNumber, streetNumber, streetName, suburb, territory, postcode, deliveryDate } = deliveryAddress
+  const { firstName, lastName, email, phone } = customer;
+  const billingAddress = customer.addresses[0]
 
   const [error, setError] = useState("")
   const handleStripeForm = () => {
@@ -186,19 +238,12 @@ export default function Payment() {
     customer: {
       firstName,
       lastName,
-      deliveryDate,
+      deliveryDate: "line 237 of payment index",
       addresses: [
         {
           type: 'billing',
           email,
           phone,
-          unitNumber,
-          streetNumber,
-          streetName,
-          suburb,
-          territory,
-          postcode,
-          deliveryDate: String(deliveryDate)
         },
       ]
     },
@@ -323,29 +368,23 @@ export default function Payment() {
     <Inner>
       <CheckoutFormGroup>
         <SectionHeader>Billing Details</SectionHeader>
-        <form noValidate>
+        <form noValidate onChange={handleFormInput} name='customer'>
           <Row>
             <InputGroup>
               <Label htmlFor="firstname">{t('customer:firstName')}</Label>
               <Input
-                name="firstname"
+                name="firstName"
                 type="text"
-                value={firstName}
-                onChange={(e) =>
-                  setState({ ...state, firstName: e.target.value })
-                }
+                defaultValue={firstName}
                 required
               />
             </InputGroup>
             <InputGroup>
               <Label htmlFor="lastname">{t('customer:lastName')}</Label>
               <Input
-                name="lastname"
+                name="lastName"
                 type="text"
-                value={lastName}
-                onChange={(e) =>
-                  setState({ ...state, lastName: e.target.value })
-                }
+                defaultValue={lastName}
                 required
               />
             </InputGroup>
@@ -356,8 +395,7 @@ export default function Payment() {
               <Input
                 name="email"
                 type="email"
-                value={email}
-                onChange={(e) => setState({ ...state, email: e.target.value })}
+                defaultValue={email}
                 required
               />
             </InputGroup>
@@ -368,8 +406,7 @@ export default function Payment() {
               <Input
                 name="phone"
                 type="number"
-                value={phone}
-                onChange={(e) => setState({ ...state, phone: e.target.value })}
+                defaultValue={phone}
                 required
               />
             </InputGroup>
@@ -378,12 +415,13 @@ export default function Payment() {
       </CheckoutFormGroup>
 
       <CheckoutFormGroup>
-        <form noValidate>
+      <form noValidate onChange={handleFormInput} name='billing'>
           <Row>
             <InputGroup>
               <Label htmlFor="address">{t('customer:address')}</Label>
               <AddressSearch
-                setAddress={setDeliveryAddress}
+                customer={customer}
+                setCustomer={setCustomer}
               />
             </InputGroup>
           </Row> 
@@ -393,10 +431,7 @@ export default function Payment() {
               <Input 
                 name="unitNumber"
                 type='number'
-                onChange={(e) =>
-                  setDeliveryAddress({ ...deliveryAddress, unitNumber: e.target.value })
-                }
-                value={unitNumber}
+                defaultValue={billingAddress.unitNumber}
               />
             </InputGroup>
             <InputGroup>
@@ -404,10 +439,7 @@ export default function Payment() {
               <Input 
                 name="streetNumber"
                 type='text'
-                value={streetNumber}
-                onChange={(e) =>
-                  setDeliveryAddress({ ...deliveryAddress, streetNumber: e.target.value })
-                }
+                defaultValue={billingAddress.streetNumber}
                 required
               />
             </InputGroup>
@@ -417,11 +449,8 @@ export default function Payment() {
               <Label htmlFor="streetName">Street Name</Label>
               <Input
                 name='streetName'
-                value={streetName}
+                defaultValue={billingAddress.streetName}
                 type='text'
-                onChange={(e) =>
-                  setDeliveryAddress({ ...deliveryAddress, streetName: e.target.value })
-                }
                 required
               />
             </InputGroup>
@@ -429,11 +458,8 @@ export default function Payment() {
               <Label htmlFor="suburb">City/Town</Label>
               <Input 
                 name='suburb'
-                value={suburb}
+                defaultValue={billingAddress.suburb}
                 type='text'
-                onChange={(e) =>
-                  setDeliveryAddress({ ...deliveryAddress, suburb: e.target.value })
-                }
                 required
               />
             </InputGroup>
@@ -443,11 +469,8 @@ export default function Payment() {
               <Label htmlFor="territory">State</Label>
               <Input 
                 name='territory'
-                value={territory}
+                defaultValue={billingAddress.territory}
                 type='text'
-                onChange={(e) =>
-                  setDeliveryAddress({ ...deliveryAddress, territory: e.target.value })
-                }
                 required
               />
             </InputGroup>
@@ -455,11 +478,8 @@ export default function Payment() {
               <Label htmlFor="postcode">Postcode</Label>
               <Input 
                 name='postcode'
-                value={postcode}
+                defaultValue={billingAddress.postcode}
                 type='number'
-                onChange={(e) =>
-                  setDeliveryAddress({ ...deliveryAddress, postcode: e.target.value })
-                }
                 required
               />
             </InputGroup>

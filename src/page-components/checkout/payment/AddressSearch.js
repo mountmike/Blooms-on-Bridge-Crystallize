@@ -3,7 +3,7 @@ import styles from './address.module.css'
 import Autocomplete from "react-google-autocomplete";
 
 
-export default function AddressSearch({ setAddress }) {
+export default function AddressSearch({ customer, setCustomer }) {
 
 
   const handleAddressSelection = (place) => {
@@ -15,20 +15,23 @@ export default function AddressSearch({ setAddress }) {
       return { [index.types[0]]: index.long_name }
     }))
 
-    let formattedAddress = {
-      unitNumber: place.subpremise ? place.subpremise : "",
-      streetNumber: place.street_number,
-      streetName: place.route,
-      suburb: place.locality,
-      territory: place.administrative_area_level_1,
-      postcode: place.postal_code,
-    }
-    setAddress(formattedAddress)
+    const newCustomer = {...customer}
+    const address = newCustomer.addresses[0]
+
+    address.unitNumber = place.subpremise ? place.subpremise : ""
+    address.streetNumber = place.street_number
+    address.streetName = place.route
+    address.suburb = place.locality
+    address.territory = place.administrative_area_level_1
+    address.postcode = place.postal_code
+
+    setCustomer(newCustomer)
   }
 
   return (
     <>
       <Autocomplete
+        id='addressSearch'
         apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}
         className={styles.addressInput}
         onPlaceSelected={(place) => {
