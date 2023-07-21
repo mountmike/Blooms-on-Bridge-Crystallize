@@ -98,16 +98,6 @@ export default function Payment() {
       },
     ]
   });
-
-  const [deliveryAddress, setDeliveryAddress] = useState({
-    unitNumber: '',
-    streetNumber: '',
-    streetName: '',
-    suburb: '',
-    territory: '',
-    postcode: '',
-    deliveryDate: ''
-  })
   const [deliveryMethod, setDeliveryMethod] = useState(null)
   const [isReadyForStripe, setIsReadyForStripe] = useState(false)
 
@@ -169,8 +159,8 @@ export default function Payment() {
       console.log(customer);
     }
 
-    if (form.name === "billing") {
-      newCustomer.addresses[0][name] = value
+    if (form.name === "delivery") {
+      newCustomer.addresses[1][name] = value
       setCustomer(newCustomer)
       console.log(customer);
     }
@@ -212,15 +202,26 @@ export default function Payment() {
   }
 
   const { firstName, lastName, email, phone } = customer;
-  const billingAddress = customer.addresses[0]
+  const deliveryAddress = customer.addresses[1]
 
   const [error, setError] = useState("")
+
   const handleStripeForm = () => {
-    const formFields = [firstName, lastName, email, phone, streetNumber, streetName, suburb, territory, postcode]
-    if (formFields.filter(field => !field).length > 0) {
-      setError("Please fill in all fields before proceeding.")
-      return
+    const collectionFields = [firstName, lastName, email, phone]
+    const deliveryFields = [firstName, lastName, email, phone, deliveryAddress.email, deliveryAddress.phone, deliveryAddress.streetNumber, deliveryAddress.streetName, deliveryAddress.suburb, deliveryAddress.territory, deliveryAddress.postcode]
+    
+    if (deliveryMethod === "collect") {
+      if (collectionFields.filter(field => !field).length > 0) {
+        setError("Please fill in all fields before proceeding.")
+        return
+      }
+    } else if (deliveryMethod.startsWith("delivery")) {
+      if (deliveryFields.filter(field => !field).length > 0) {
+        setError("Please fill in all fields before proceeding.")
+        return
+      }
     }
+    
     setIsReadyForStripe(true)
   }
 
@@ -414,93 +415,139 @@ export default function Payment() {
         </form>
       </CheckoutFormGroup>
 
-      <CheckoutFormGroup>
-      <form noValidate onChange={handleFormInput} name='billing'>
-          <Row>
-            <InputGroup>
-              <Label htmlFor="address">{t('customer:address')}</Label>
-              <AddressSearch
-                customer={customer}
-                setCustomer={setCustomer}
-              />
-            </InputGroup>
-          </Row> 
-          <Row>
-            <InputGroup>
-              <Label htmlFor="unitNumber">Unit Number</Label>
-              <Input 
-                name="unitNumber"
-                type='number'
-                defaultValue={billingAddress.unitNumber}
-              />
-            </InputGroup>
-            <InputGroup>
-              <Label htmlFor="streetNumber">Street Number</Label>
-              <Input 
-                name="streetNumber"
-                type='text'
-                defaultValue={billingAddress.streetNumber}
-                required
-              />
-            </InputGroup>
-          </Row>
-          <Row>
-            <InputGroup>
-              <Label htmlFor="streetName">Street Name</Label>
-              <Input
-                name='streetName'
-                defaultValue={billingAddress.streetName}
-                type='text'
-                required
-              />
-            </InputGroup>
-            <InputGroup>
-              <Label htmlFor="suburb">City/Town</Label>
-              <Input 
-                name='suburb'
-                defaultValue={billingAddress.suburb}
-                type='text'
-                required
-              />
-            </InputGroup>
-          </Row>
-          <Row>
-            <InputGroup>
-              <Label htmlFor="territory">State</Label>
-              <Input 
-                name='territory'
-                defaultValue={billingAddress.territory}
-                type='text'
-                required
-              />
-            </InputGroup>
-            <InputGroup>
-              <Label htmlFor="postcode">Postcode</Label>
-              <Input 
-                name='postcode'
-                defaultValue={billingAddress.postcode}
-                type='number'
-                required
-              />
-            </InputGroup>
-          </Row>
-        </form>
-      </CheckoutFormGroup>
-
-      <SectionHeader>
+      <h1>
         {('Delivery Options')}
         <FootNote>We can deliver to Benalla, Wangaratta, Shepperton, Violet Town, Euroa & Mansfield.</FootNote>
         <FootNote>If you are outside of these towns, give us a call for possible options.</FootNote>
-      </SectionHeader>
-      <CheckoutFormGroup>
-        <Delivery 
-        postcode={deliveryAddress.postcode}
-        deliveryMethod={deliveryMethod}
-        setDeliveryMethod={setDeliveryMethod}
-        isReadyForStripe={isReadyForStripe}
-        setDeliveryAddress={setDeliveryAddress}
-        />
-      </CheckoutFormGroup>
+      </h1>
+
+      { deliveryMethod?.startsWith("delivery") &&
+        <CheckoutFormGroup>
+          <SectionHeader>Delivery Details</SectionHeader>
+          <form noValidate onChange={handleFormInput} name='delivery'>
+            <Row>
+              <InputGroup>
+                <Label htmlFor="firstname">recipient first name</Label>
+                <Input
+                  name="firstName"
+                  type="text"
+                  defaultValue={firstName}
+                  required
+                />
+              </InputGroup>
+              <InputGroup>
+                <Label htmlFor="lastname">recipient first name</Label>
+                <Input
+                  name="lastName"
+                  type="text"
+                  defaultValue={lastName}
+                  required
+                />
+              </InputGroup>
+            </Row>
+            <Row>
+              <InputGroup>
+                <Label htmlFor="recipientemail">recipient email</Label>
+                <Input
+                  name="email"
+                  type="email"
+                  defaultValue={deliveryAddress.email}
+                  required
+                />
+              </InputGroup>
+            </Row>
+            <Row>
+              <InputGroup>
+                <Label htmlFor="recipientphone">recipient phone</Label>
+                <Input
+                  name="phone"
+                  type="number"
+                  defaultValue={deliveryAddress.phone}
+                  required
+                />
+              </InputGroup>
+            </Row>
+              <Row>
+                <InputGroup>
+                  <Label htmlFor="address">{t('customer:address')}</Label>
+                  <AddressSearch
+                    customer={customer}
+                    setCustomer={setCustomer}
+                  />
+                </InputGroup>
+              </Row>
+              <Row>
+                <InputGroup>
+                  <Label htmlFor="unitNumber">Unit Number</Label>
+                  <Input
+                    name="unitNumber"
+                    type='number'
+                    defaultValue={deliveryAddress.unitNumber}
+                  />
+                </InputGroup>
+                <InputGroup>
+                  <Label htmlFor="streetNumber">Street Number</Label>
+                  <Input
+                    name="streetNumber"
+                    type='text'
+                    defaultValue={deliveryAddress.streetNumber}
+                    required
+                  />
+                </InputGroup>
+              </Row>
+              <Row>
+                <InputGroup>
+                  <Label htmlFor="streetName">Street Name</Label>
+                  <Input
+                    name='streetName'
+                    defaultValue={deliveryAddress.streetName}
+                    type='text'
+                    required
+                  />
+                </InputGroup>
+                <InputGroup>
+                  <Label htmlFor="suburb">City/Town</Label>
+                  <Input
+                    name='suburb'
+                    defaultValue={deliveryAddress.suburb}
+                    type='text'
+                    required
+                  />
+                </InputGroup>
+              </Row>
+              <Row>
+                <InputGroup>
+                  <Label htmlFor="territory">State</Label>
+                  <Input
+                    name='territory'
+                    defaultValue={deliveryAddress.territory}
+                    type='text'
+                    required
+                  />
+                </InputGroup>
+                <InputGroup>
+                  <Label htmlFor="postcode">Postcode</Label>
+                  <Input
+                    name='postcode'
+                    defaultValue={deliveryAddress.postcode}
+                    type='number'
+                    required
+                  />
+                </InputGroup>
+              </Row>
+          </form>
+        </CheckoutFormGroup>
+      }
+        <CheckoutFormGroup>
+          <Delivery
+          postcode={deliveryAddress.postcode}
+          deliveryMethod={deliveryMethod}
+          setDeliveryMethod={setDeliveryMethod}
+          isReadyForStripe={isReadyForStripe}
+          setCustomer={setCustomer}
+          />
+        </CheckoutFormGroup>
+
 
       {/* <Voucher /> */}
       {/* <CheckoutFormGroup withUpperMargin>

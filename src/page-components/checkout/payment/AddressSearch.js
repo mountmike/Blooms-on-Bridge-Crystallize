@@ -16,7 +16,7 @@ export default function AddressSearch({ customer, setCustomer }) {
     }))
 
     const newCustomer = {...customer}
-    const address = newCustomer.addresses[0]
+    const address = newCustomer.addresses[1]
 
     address.unitNumber = place.subpremise ? place.subpremise : ""
     address.streetNumber = place.street_number

@@ -8,6 +8,9 @@ import { enGB } from 'date-fns/locale'
 import { DatePickerCalendar } from 'react-nice-dates'
 import 'react-nice-dates/build/style.css'
 import { useEffect, useState } from 'react';
+import { Button } from 'ui';
+
+import { ErrorMessage } from '../styles';
 
 const listOfDeliveryPostcodes = ["3677", "3669", "3666", "3630", "3722"];
 const listOfMothersDays = [
@@ -24,7 +27,8 @@ const listOfMothersDays = [
 
 
 
-export default function Delivery({ postcode, deliveryMethod, setDeliveryMethod, isReadyForStripe, setDeliveryAddress }) {
+export default function Delivery({ postcode, deliveryMethod, setDeliveryMethod, isReadyForStripe, setCustomer }) {
+    const [displayDeliveryChoice, setDisplayDeliveryChoice] = useState(true)
     const [date, setDate] = useState()
     const [publicHolidays, setPublicHolidays] = useState(null)
 
@@ -51,13 +55,11 @@ export default function Delivery({ postcode, deliveryMethod, setDeliveryMethod, 
 
     }, [])
 
-    useEffect(() => {
-        const shortDate = date ? format(date, 'dd MMM yyyy', { locale: enGB }) : "none"
-        setDeliveryAddress((deliveryAddress) => {
-            return { ...deliveryAddress, deliveryDate: shortDate }
-        })
+    // useEffect(() => {
+    //     const shortDate = date ? format(date, 'dd MMM yyyy', { locale: enGB }) : "none"
+    //     setCustomer({...})
 
-    }, [date])
+    // }, [date])
 
     const calendarModifiers = {
         disabled: function (date) {
@@ -77,7 +79,15 @@ export default function Delivery({ postcode, deliveryMethod, setDeliveryMethod, 
     const maxDate = add(new Date(), { days: 90,});
 
     const handleDeliverySelection = (e) => {
-        setDeliveryMethod(e.target.value)
+        setDisplayDeliveryChoice(false)
+
+        if (e.target.closest("button")?.name === "collect") {
+            setDeliveryMethod("collect")
+        } else if (e.target.closest("button")?.name === "deliver") {
+            setDeliveryMethod("delivery")
+        } else {
+            setDeliveryMethod(e.target.value)
+        }
     }
  
     const isInTown = () => {
@@ -100,9 +110,18 @@ export default function Delivery({ postcode, deliveryMethod, setDeliveryMethod, 
     padding: 15px 15px;
     `;
 
+
     const Wrapper = styled.div`
         padding-right: 15px;
         margin-bottom: 15px;
+    `;
+
+    const ColumnWrapper = styled.div`
+        padding-right: 15px;
+        margin-bottom: 15px;
+        display: flex;
+        justify-content: space-between;
+        gap: 15px;
     `;
 
     const Label = styled.label`
@@ -134,16 +153,43 @@ export default function Delivery({ postcode, deliveryMethod, setDeliveryMethod, 
     `
 
 
-    if (!postcode) {
-        return (
-            <Wrapper>
-                <span>Please enter a valid address to calculate delivery</span>
-            </Wrapper>
-        )
-    } else {
-        return (
+
+    return (
+        <>
+        { displayDeliveryChoice ?
+        <ColumnWrapper>
+            <Button 
+                onClick={handleDeliverySelection}
+                name="collect"
+            >
+            Pickup
+            </Button>
+            <Button 
+                onClick={handleDeliverySelection}
+                name="deliver"
+            >
+            Calculate Delivery
+            </Button>
+        </ColumnWrapper>
+        :
+        // if unable to deliver to inputed address, output error with option to collect in store
         <Wrapper onChange={handleDeliverySelection}>
-            <Row>
+            { !isInTown() && !isOutsideTown() && deliveryMethod != "collect" && postcode &&
+                <div>
+                    <ErrorMessage>
+                        I'm sorry but I don't think we can deliver to that location. Try giving us a call to see if we can make a special arrangment.
+                    </ErrorMessage>
+                    <Button
+                        onClick={handleDeliverySelection}
+                        name="collect"
+                        >
+                        Or choose in-store pickup
+                    </Button>
+                </div>
+            }
+
+            
+            {/* <Row>
                 <div className={styles.tooltipContainer}>
                     <FontAwesomeIcon icon={faCircleInfo} width={20} height={20} />
                     <div className={styles.tooltipText}>
@@ -160,7 +206,7 @@ export default function Delivery({ postcode, deliveryMethod, setDeliveryMethod, 
                 readOnly
                 disabled={isReadyForStripe}
                 />
-            </Row>
+            </Row> */}
 
             {isInTown() &&
             <Row>
@@ -213,7 +259,7 @@ export default function Delivery({ postcode, deliveryMethod, setDeliveryMethod, 
                             <span>We try out best but cannot always guarantee exact delivery dates. If we can't make the requested date, delivery will be made the following business day.</span>
                         </div>
                     </div>
-                    <b> Request Delivery Date:</b> {date ? format(date, 'dd MMM yyyy', { locale: enGB }) : 'none'}
+                    <b> Request delivery/pickup date:</b> {date ? format(date, 'dd MMM yyyy', { locale: enGB }) : 'none'}
                 </DateHeading>
                 <DatePickerCalendar 
                     date={date} 
@@ -226,6 +272,10 @@ export default function Delivery({ postcode, deliveryMethod, setDeliveryMethod, 
                 />
             </DateWrapper>    
         </Wrapper>
-        )
-    }
+        }
+        </>
+        
+        
+    )
+    
 }
