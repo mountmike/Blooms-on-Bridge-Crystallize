@@ -82,3 +82,9 @@
     }
 }
 
+.heroGradient {
+    height: 50rem;
+    background: rgb(227,207,198);
+    background: linear-gradient(0deg, rgba(227,207,198,1) 0%, rgba(183,112,68,1) 40%, rgba(144,143,113,1) 83%);
+}
+

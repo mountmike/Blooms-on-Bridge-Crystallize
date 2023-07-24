@@ -87,7 +87,8 @@ const Paragraph = ({
                 src={currentHeroImg}
                 width="100%"
               ></img> */}
-              <Images images={images} />
+              <Images images={images} 
+              />
               <Videos videos={videos} />
             </Media>
           :

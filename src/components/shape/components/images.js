@@ -61,6 +61,7 @@ export default function Images({ images }) {
     return null;
   }
 
+  console.log(images);
 
   if (images.length === 1) {
     return (
