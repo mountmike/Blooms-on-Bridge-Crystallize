@@ -8,7 +8,7 @@ Other integrations include [Stripe][0] for payment handling and [SendGrid][1]
 for email order confirmations with Webhooks and magic link sign in.
 
 See here for [The Service API repo][2] which manages the backend functionality
-via Vercel serverless functions.
+via [Vercel serverless functions][18].
 
 ## See LIVE demo
 
@@ -25,6 +25,40 @@ already completly comfortable with.
 I decided to use Crystallize as a CSM/PIM platform because they had user
 friendly portal for the florist shop, excellent developer documentation and some
 great [boilerplates][4] to get started with.
+
+### The biggest challenges included:
+
+- Learning the Crystallize eco-ystem - particularly when it came to reading
+  different `shapes` from the CMS with GraphQL. The boilerplate included a lot
+  of the hardwork but reading and understanding the pre-existing code always
+  takes some time.
+
+- Working with the Florist's criteria to build a checkout procedure that
+  included address validation, programatically suggested delivery options (only
+  to specific areas) and a calendar system for delivery dates.
+
+- Integrating and building onto [The Service API][2] which I also bootstrapped
+  from a Crystallize boilerplate. This was my first time using serverless
+  functions so there was an obvious learning curve.
+
+### The most rewarding aspects:
+
+- Seeing how quick and reponsive the site is thanks to Next.js & server-side
+  rendering.
+- Teaching the florist to use the CMS/PIM system, particuarly the 'blog-like'
+  functionality which she can now use to showcase the weddings she does for
+  clients.
+- Sucessfully integrating Stripe payments into the checkout process with the
+  Payment Intent API. Again, the boilerplate from Crystallize had done a lot of
+  the hard yards here but it didn't work off the bat and lead to a lot of
+  debugging. I found a solution however and additionally made a pull request to
+  Crystallize's open source boilerplate with my code.
+
+- Using webhooks to email confirmation/receipts to customers & new order
+  notifications to the store upon a successful orders with SendGrid.
+
+- Seeing the final version of my delivery/address search components in the
+  checkout process and how they worked well to address the shop's needs.
 
 ## App Structure
 
