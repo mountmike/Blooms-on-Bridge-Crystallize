@@ -144,7 +144,6 @@ export default function Payment() {
 
   }, [deliveryMethod])
 
-
   const handleFormInput = (e) => {
     const newCustomer = {...customer}
     const form = e.target.closest("form")
@@ -459,7 +458,7 @@ export default function Payment() {
                 />
               </InputGroup>
               <InputGroup>
-                <Label htmlFor="lastname">recipient first name</Label>
+                <Label htmlFor="lastname">recipient last name</Label>
                 <Input
                   name="lastName"
                   type="text"
