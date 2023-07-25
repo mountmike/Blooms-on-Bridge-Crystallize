@@ -28,7 +28,7 @@ great [boilerplates][4] to get started with.
 
 ### The biggest challenges included:
 
-- Learning the Crystallize eco-ystem - particularly when it came to reading
+- Learning the Crystallize eco-system - particularly when it came to reading
   different `shapes` from the CMS with GraphQL. The boilerplate included a lot
   of the hardwork but reading and understanding the pre-existing code always
   takes some time.
