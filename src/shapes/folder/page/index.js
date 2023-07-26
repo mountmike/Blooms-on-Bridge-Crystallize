@@ -59,7 +59,7 @@ export default function FolderPage({ folder, hideHeader }) {
 
       {hasGridRelation &&
         gridRelations.map((grid, index) => (
-          <section>
+          <section key={index}>
     
             <GridHeading>{grid.name}</GridHeading>
             
