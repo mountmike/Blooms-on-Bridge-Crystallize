@@ -19,8 +19,6 @@ import { getData } from '../get-data';
 import Stock from './components/stock';
 import { useTranslation } from 'next-i18next';
 
-
-
 import {
   Inner,
   Media,
@@ -41,24 +39,27 @@ export { getData };
 
 // quick function to make an object for sub path navigation in each product - nested loops so not very efficient
 function makePaths(arr) {
-  let currentPath = ""
-  return arr.map(el => {
-    currentPath += "/" + el
+  let currentPath = '';
+  return arr.map((el) => {
+    currentPath += '/' + el;
     let obj = {
-      name: el.split("-").map(word => {
-        return word.slice(0, 1).toUpperCase() + word.slice(1)
-      }).join(" "),
+      name: el
+        .split('-')
+        .map((word) => {
+          return word.slice(0, 1).toUpperCase() + word.slice(1);
+        })
+        .join(' '),
       path: currentPath
-    }
-    return obj
-  })
+    };
+    return obj;
+  });
 }
 
 export default function ProductShape({ product, locale }) {
   const { t } = useTranslation('product');
   const { name, components = [], variants = [], topics = [] } = product;
 
-  const paths = makePaths(product.path.split("/").slice(1))
+  const paths = makePaths(product.path.split('/').slice(1));
 
   // Set the selected variant to the default
   const [selectedVariant, setSelectedVariant] = useState(
@@ -88,23 +89,22 @@ export default function ProductShape({ product, locale }) {
 
   return (
     <>
-      
       <Inner>
         <Content>
-        <ProductSubNav>
-          {paths.map((link, index) => (
-            index < 1 ?
-            <span>
-              <Link href={link.path}>{link.name}</Link>
-            </span>
-            :
-            <span>
-              <span> ⚘ </span>
-              <Link href={link.path}>{link.name}</Link>
-            </span>
-            
-          ))}
-        </ProductSubNav>
+          <ProductSubNav>
+            {paths.map((link, index) =>
+              index < 1 ? (
+                <span key={1}>
+                  <Link href={link.path}>{link.name}</Link>
+                </span>
+              ) : (
+                <span key={2}>
+                  <span> ⚘ </span>
+                  <Link href={link.path}>{link.name}</Link>
+                </span>
+              )
+            )}
+          </ProductSubNav>
           <Media>
             {selectedVariant?.images?.map((img) => (
               <ImgContainer
@@ -158,7 +158,6 @@ export default function ProductShape({ product, locale }) {
             <Stock selectedVariant={selectedVariant} />
           </ActionsSticky>
         </Actions>
-        
       </Inner>
 
       {Boolean(relatedProducts) && (

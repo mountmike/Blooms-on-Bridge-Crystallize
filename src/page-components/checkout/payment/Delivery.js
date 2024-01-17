@@ -1,105 +1,115 @@
 import styled from 'styled-components';
-import styles from './delivery.module.css'
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faCircleInfo } from "@fortawesome/free-solid-svg-icons"
+import styles from './delivery.module.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCircleInfo } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
-import { format, getDay, add } from 'date-fns'
-import { enGB } from 'date-fns/locale'
-import { DatePickerCalendar } from 'react-nice-dates'
-import 'react-nice-dates/build/style.css'
+import { format, getDay, add } from 'date-fns';
+import { enGB } from 'date-fns/locale';
+import { DatePickerCalendar } from 'react-nice-dates';
+import 'react-nice-dates/build/style.css';
 import { useEffect, useState } from 'react';
 import { Button } from 'ui';
 
 import { ErrorMessage } from '../styles';
 
-const listOfDeliveryPostcodes = ["3677", "3669", "3666", "3630", "3722"];
+const listOfDeliveryPostcodes = ['3677', '3669', '3666', '3630', '3722'];
 const listOfMothersDays = [
-    "Sun May 12 2024 00:00:00 GMT+1000 (Australian Eastern Standard Time)",
-    "Sun May 11 2025 00:00:00 GMT+1000 (Australian Eastern Standard Time)",
-    "Sun May 10 2026 00:00:00 GMT+1000 (Australian Eastern Standard Time)",
-    "Sun May 09 2027 00:00:00 GMT+1000 (Australian Eastern Standard Time)",
-    "Sun May 14 2028 00:00:00 GMT+1000 (Australian Eastern Standard Time)",
-    "Sun May 13 2029 00:00:00 GMT+1000 (Australian Eastern Standard Time)",
-    "Sun May 12 2030 00:00:00 GMT+1000 (Australian Eastern Standard Time)",
-    "Sun May 11 2031 00:00:00 GMT+1000 (Australian Eastern Standard Time)",
-    "Sun May 19 2032 00:00:00 GMT+1000 (Australian Eastern Standard Time)"
-]
+  'Sun May 12 2024 00:00:00 GMT+1000 (Australian Eastern Standard Time)',
+  'Sun May 11 2025 00:00:00 GMT+1000 (Australian Eastern Standard Time)',
+  'Sun May 10 2026 00:00:00 GMT+1000 (Australian Eastern Standard Time)',
+  'Sun May 09 2027 00:00:00 GMT+1000 (Australian Eastern Standard Time)',
+  'Sun May 14 2028 00:00:00 GMT+1000 (Australian Eastern Standard Time)',
+  'Sun May 13 2029 00:00:00 GMT+1000 (Australian Eastern Standard Time)',
+  'Sun May 12 2030 00:00:00 GMT+1000 (Australian Eastern Standard Time)',
+  'Sun May 11 2031 00:00:00 GMT+1000 (Australian Eastern Standard Time)',
+  'Sun May 19 2032 00:00:00 GMT+1000 (Australian Eastern Standard Time)'
+];
 
-export default function Delivery({ postcode, deliveryMethod, setDeliveryMethod, isReadyForStripe, setCustomer }) {
-    const [displayDeliveryChoice, setDisplayDeliveryChoice] = useState(true)
-    const [date, setDate] = useState()
-    const [publicHolidays, setPublicHolidays] = useState(null)
+export default function Delivery({
+  postcode,
+  deliveryMethod,
+  setDeliveryMethod,
+  isReadyForStripe,
+  setCustomer
+}) {
+  const [displayDeliveryChoice, setDisplayDeliveryChoice] = useState(true);
+  const [date, setDate] = useState();
+  const [publicHolidays, setPublicHolidays] = useState(null);
 
-    useEffect(() => {
-        const baseDate = new Date()
-        const fromDate = new Date().toISOString().split('T')[0]
-        const toDate = new Date(baseDate.setDate(baseDate.getDate() + 90)).toISOString().split('T')[0]
-        const url = `https://wovg-community.gateway.prod.api.vic.gov.au/vicgov/v2.0/dates?type=PUBLIC_HOLIDAY&from_date=${fromDate}&to_date=${toDate}&format=json`
+  useEffect(() => {
+    const baseDate = new Date();
+    const fromDate = new Date().toISOString().split('T')[0];
+    const toDate = new Date(baseDate.setDate(baseDate.getDate() + 90))
+      .toISOString()
+      .split('T')[0];
+    const url = `https://wovg-community.gateway.prod.api.vic.gov.au/vicgov/v2.0/dates?type=PUBLIC_HOLIDAY&from_date=${fromDate}&to_date=${toDate}&format=json`;
 
-        const config = {
-            headers:{
-                "Content-Type": "application/json",
-                "Accept": "application/json",
-                "apikey": process.env.NEXT_PUBLIC_VIC_IMPORTANT_DATES_KEY
-            }
-        };
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+        apikey: process.env.NEXT_PUBLIC_VIC_IMPORTANT_DATES_KEY
+      }
+    };
 
-        axios.get(url, config)
-        .then(res => setPublicHolidays(res.data.dates.map(el => {
-            let date = new Date(el.date)
-            date.setHours(0,0,0,0)
-            return date.toString()
-        })))
-
-    }, [])
-
-    useEffect(() => {
-        const shortDate = date ? format(date, 'dd MMM yyyy', { locale: enGB }) : "none"
-        setCustomer(customer => {
-            return {...customer, deliveryDate: date?.toLocaleDateString('en-GB')}
+    axios.get(url, config).then((res) =>
+      setPublicHolidays(
+        res.data.dates.map((el) => {
+          let date = new Date(el.date);
+          date.setHours(0, 0, 0, 0);
+          return date.toString();
         })
+      )
+    );
+  }, []);
 
-    }, [date])
+  useEffect(() => {
+    const shortDate = date
+      ? format(date, 'dd MMM yyyy', { locale: enGB })
+      : 'none';
+    setCustomer((customer) => {
+      return { ...customer, deliveryDate: date?.toLocaleDateString('en-GB') };
+    });
+  }, [date, setCustomer]);
 
-    const calendarModifiers = {
-        disabled: function (date) {
-            let dateString = date.toString()
-            // disable all sundays accept mothers day
-            if (getDay(date) === 0 && !listOfMothersDays.includes(dateString)) {
-                return true
-            }
-            // disable public holidays
-            if (publicHolidays.includes(dateString)) {
-                return true
-            }
-        } 
+  const calendarModifiers = {
+    disabled: function (date) {
+      let dateString = date.toString();
+      // disable all sundays accept mothers day
+      if (getDay(date) === 0 && !listOfMothersDays.includes(dateString)) {
+        return true;
+      }
+      // disable public holidays
+      if (publicHolidays.includes(dateString)) {
+        return true;
+      }
     }
-    
-    const tomorrow = add(new Date(), { days: 1,});
-    const maxDate = add(new Date(), { days: 90,});
+  };
 
-    const handleDeliverySelection = (e) => {
-        setDisplayDeliveryChoice(false)
+  const tomorrow = add(new Date(), { days: 1 });
+  const maxDate = add(new Date(), { days: 90 });
 
-        if (e.target.closest("button")?.name === "collect") {
-            setDeliveryMethod("collect")
+  const handleDeliverySelection = (e) => {
+    setDisplayDeliveryChoice(false);
 
-        } else if (e.target.closest("button")?.name === "deliver") {
-            setDeliveryMethod("delivery")
-        } else {
-            setDeliveryMethod(e.target.value)
-        }
+    if (e.target.closest('button')?.name === 'collect') {
+      setDeliveryMethod('collect');
+    } else if (e.target.closest('button')?.name === 'deliver') {
+      setDeliveryMethod('delivery');
+    } else {
+      setDeliveryMethod(e.target.value);
     }
- 
-    const isInTown = () => {
-        return postcode == "3672" ? true : false
-    }
+  };
 
-    const isOutsideTown = () => {
-        return listOfDeliveryPostcodes.includes(postcode) ? true : false
-    }
+  const isInTown = () => {
+    return postcode == '3672' ? true : false;
+  };
 
-    const Row = styled.div`
+  const isOutsideTown = () => {
+    return listOfDeliveryPostcodes.includes(postcode) ? true : false;
+  };
+
+  const Row = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -109,85 +119,80 @@ export default function Delivery({ postcode, deliveryMethod, setDeliveryMethod, 
     font-weight: 500;
     margin-bottom: 0.5rem;
     padding: 15px 15px;
-    `;
+  `;
 
-    const Wrapper = styled.div`
-        padding-right: 15px;
-        margin-bottom: 15px;
-    `;
+  const Wrapper = styled.div`
+    padding-right: 15px;
+    margin-bottom: 15px;
+  `;
 
-    const ColumnWrapper = styled.div`
-        padding-right: 15px;
-        margin-bottom: 15px;
-        display: flex;
-        justify-content: space-between;
-        gap: 15px;
-    `;
+  const ColumnWrapper = styled.div`
+    padding-right: 15px;
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+  `;
 
-    const Label = styled.label`
+  const Label = styled.label`
     font-size: 1rem;
-    `
+  `;
 
-    const DateHeading = styled.span`
+  const DateHeading = styled.span`
     display: flex;
     justify-content: center;
     gap: 10px;
     font-size: 1rem;
-        @media only screen and (max-width: 768px) {
-        margin: 0 10px;
-        }
-    `
+    @media only screen and (max-width: 768px) {
+      margin: 0 10px;
+    }
+  `;
 
-    const Radio = styled.input`
+  const Radio = styled.input`
     width: 1.4rem;
     height: 1.4rem;
-    `
+  `;
 
-    const DateWrapper = styled.div`
-        display: flex;
-        flex-direction: column;
-        text-align: center;
-        width: 100%;
-        margin: 30px 0;
-        gap: 10px;
-    `
+  const DateWrapper = styled.div`
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    width: 100%;
+    margin: 30px 0;
+    gap: 10px;
+  `;
 
-    return (
-        <>
-        { displayDeliveryChoice ?
+  return (
+    <>
+      {displayDeliveryChoice ? (
         <ColumnWrapper>
-            <Button 
-                onClick={handleDeliverySelection}
-                name="collect"
-            >
+          <Button onClick={handleDeliverySelection} name="collect">
             Pickup
-            </Button>
-            <Button 
-                onClick={handleDeliverySelection}
-                name="deliver"
-            >
+          </Button>
+          <Button onClick={handleDeliverySelection} name="deliver">
             Calculate Delivery
-            </Button>
+          </Button>
         </ColumnWrapper>
-        :
+      ) : (
         // if unable to deliver to inputed address, output error with option to collect in store
         <Wrapper onChange={handleDeliverySelection}>
-            { !isInTown() && !isOutsideTown() && deliveryMethod != "collect" && postcode &&
-                <div>
-                    <ErrorMessage>
-                        I'm sorry but I don't think we can deliver to that location. Try giving us a call to see if we can make a special arrangment.
-                    </ErrorMessage>
-                    <Button
-                        onClick={handleDeliverySelection}
-                        name="collect"
-                        >
-                        Or choose in-store pickup
-                    </Button>
-                </div>
-            }
+          {!isInTown() &&
+            !isOutsideTown() &&
+            deliveryMethod != 'collect' &&
+            postcode && (
+              <div>
+                <ErrorMessage>
+                  I&apos;m sorry but I don&apos;t think we can deliver to that
+                  location. Try giving us a call to see if we can make a special
+                  arrangement.
+                </ErrorMessage>
+                <Button onClick={handleDeliverySelection} name="collect">
+                  Or choose in-store pickup
+                </Button>
+              </div>
+            )}
 
-            
-            {/* <Row>
+          {/* <Row>
                 <div className={styles.tooltipContainer}>
                     <FontAwesomeIcon icon={faCircleInfo} width={20} height={20} />
                     <div className={styles.tooltipText}>
@@ -206,74 +211,82 @@ export default function Delivery({ postcode, deliveryMethod, setDeliveryMethod, 
                 />
             </Row> */}
 
-            {isInTown() &&
+          {isInTown() && (
             <Row>
-                <div className={styles.tooltipContainer}>
-                    <FontAwesomeIcon icon={faCircleInfo} width={20} height={20} />
-                    <div className={styles.tooltipText}>
-                        <span>Delivery within the township of Benalla.</span>
-                    </div>
+              <div className={styles.tooltipContainer}>
+                <FontAwesomeIcon icon={faCircleInfo} width={20} height={20} />
+                <div className={styles.tooltipText}>
+                  <span>Delivery within the township of Benalla.</span>
                 </div>
-                <Label htmlFor="deliveryInTown">Delivery in Benalla - <b>$10</b></Label>
-                <Radio 
-                type="radio" 
-                id='deliveryInTown' 
-                name='deliverySelection' 
-                value='deliveryInTown'
+              </div>
+              <Label htmlFor="deliveryInTown">
+                Delivery in Benalla - <b>$10</b>
+              </Label>
+              <Radio
+                type="radio"
+                id="deliveryInTown"
+                name="deliverySelection"
+                value="deliveryInTown"
                 checked={deliveryMethod == 'deliveryInTown'}
                 readOnly
                 disabled={isReadyForStripe}
-                />
+              />
             </Row>
-            }
-            {isOutsideTown() &&
+          )}
+          {isOutsideTown() && (
             <Row>
-                <div className={styles.tooltipContainer}>
-                    <FontAwesomeIcon icon={faCircleInfo} width={20} height={20} />
-                    <div className={styles.tooltipText}>
-                        <span>Delivery to towns outside Benalla subject to courier availability and will occur on weekdays only, as our couriers do not work on weekends</span>
-                    </div>
+              <div className={styles.tooltipContainer}>
+                <FontAwesomeIcon icon={faCircleInfo} width={20} height={20} />
+                <div className={styles.tooltipText}>
+                  <span>
+                    Delivery to towns outside Benalla subject to courier
+                    availability and will occur on weekdays only, as our
+                    couriers do not work on weekends
+                  </span>
                 </div>
-                <Label htmlFor="deliveryOutsideTown">
+              </div>
+              <Label htmlFor="deliveryOutsideTown">
                 Delivery outside of Benalla - <b>$20</b>
-                </Label>
-                <Radio 
-                type="radio" 
-                id='deliveryOutsideTown' 
-                name='deliverySelection' 
-                value='deliveryOutsideTown' 
-                checked={deliveryMethod == 'deliveryOutsideTown' }
+              </Label>
+              <Radio
+                type="radio"
+                id="deliveryOutsideTown"
+                name="deliverySelection"
+                value="deliveryOutsideTown"
+                checked={deliveryMethod == 'deliveryOutsideTown'}
                 readOnly
                 disabled={isReadyForStripe}
-                />
+              />
             </Row>
-            }
-            
-            <DateWrapper>
-                <DateHeading>
-                    <div className={styles.tooltipContainer}>
-                        <FontAwesomeIcon icon={faCircleInfo} width={15} height={15} />
-                        <div className={styles.tooltipText}>
-                            <span>We try out best but cannot always guarantee exact delivery dates. If we can't make the requested date, delivery will be made the following business day.</span>
-                        </div>
-                    </div>
-                    <b> Request delivery/pickup date:</b> {date ? format(date, 'dd MMM yyyy', { locale: enGB }) : 'none'}
-                </DateHeading>
-                <DatePickerCalendar 
-                    date={date} 
-                    onDateChange={setDate} 
-                    locale={enGB}
-                    modifiers={calendarModifiers}
-                    minimumDate={tomorrow}
-                    maximumDate={maxDate}
-                    format='dd MMM yyyy'
-                />
-            </DateWrapper>    
+          )}
+
+          <DateWrapper>
+            <DateHeading>
+              <div className={styles.tooltipContainer}>
+                <FontAwesomeIcon icon={faCircleInfo} width={15} height={15} />
+                <div className={styles.tooltipText}>
+                  <span>
+                    We try out best but cannot always guarantee exact delivery
+                    dates. If we can&apos;t make the requested date, delivery
+                    will be made the following business day.
+                  </span>
+                </div>
+              </div>
+              <b> Request delivery/pickup date:</b>{' '}
+              {date ? format(date, 'dd MMM yyyy', { locale: enGB }) : 'none'}
+            </DateHeading>
+            <DatePickerCalendar
+              date={date}
+              onDateChange={setDate}
+              locale={enGB}
+              modifiers={calendarModifiers}
+              minimumDate={tomorrow}
+              maximumDate={maxDate}
+              format="dd MMM yyyy"
+            />
+          </DateWrapper>
         </Wrapper>
-        }
-        </>
-        
-        
-    )
-    
+      )}
+    </>
+  );
 }
