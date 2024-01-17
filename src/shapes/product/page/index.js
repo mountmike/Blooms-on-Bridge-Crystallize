@@ -91,20 +91,20 @@ export default function ProductShape({ product, locale }) {
     <>
       <Inner>
         <Content>
-          {/*<ProductSubNav>*/}
-          {/*  {paths.map((link, index) =>*/}
-          {/*    index < 1 ? (*/}
-          {/*      <span key={1}>*/}
-          {/*        <Link href={link.path}>{link.name}</Link>*/}
-          {/*      </span>*/}
-          {/*    ) : (*/}
-          {/*      <span key={2}>*/}
-          {/*        <span> ⚘ </span>*/}
-          {/*        <Link href={link.path}>{link.name}</Link>*/}
-          {/*      </span>*/}
-          {/*    )*/}
-          {/*  )}*/}
-          {/*</ProductSubNav>*/}
+          <ProductSubNav>
+            {paths.map((link, index) =>
+              index < 1 ? (
+                <span key={1}>
+                  <Link href={link.path}>{link.name}</Link>
+                </span>
+              ) : (
+                <span key={2}>
+                  <span> ⚘ </span>
+                  <Link href={link.path}>{link.name}</Link>
+                </span>
+              )
+            )}
+          </ProductSubNav>
           <Media>
             {selectedVariant?.images?.map((img) => (
               <ImgContainer
