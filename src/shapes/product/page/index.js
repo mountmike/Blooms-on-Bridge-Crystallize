@@ -63,7 +63,7 @@ export default function ProductShape({ product, locale }) {
 
   // Set the selected variant to the default
   const [selectedVariant, setSelectedVariant] = useState(
-    variants.find((variant) => variant.isDefault)
+    variants?.find((variant) => variant.isDefault)
   );
 
   function onVariantChange(variant) {
@@ -95,12 +95,12 @@ export default function ProductShape({ product, locale }) {
             {paths.map((link, index) =>
               index < 1 ? (
                 <span key={1}>
-                  <Link href={link.path}>{link.name}</Link>
+                  <Link href={link?.path}>{link?.name}</Link>
                 </span>
               ) : (
                 <span key={2}>
                   <span> ⚘ </span>
-                  <Link href={link.path}>{link.name}</Link>
+                  <Link href={link?.path}>{link?.name}</Link>
                 </span>
               )
             )}
@@ -141,7 +141,7 @@ export default function ProductShape({ product, locale }) {
               </Summary>
             )}
             {topics?.map((topic) => (
-              <TopicTag {...topic} key={topic.id} />
+              <TopicTag {...topic} key={topic?.id} />
             ))}
             {hasVariants && (
               <VariantSelector
