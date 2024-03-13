@@ -15,7 +15,7 @@ import {
 function reduceAttributes(variants) {
   return variants.reduce((acc, variant) => {
     const attrs = acc;
-    variant.attributes.forEach(({ attribute, value }) => {
+    variant.attributes?.forEach(({ attribute, value }) => {
       const currentAttribute = attrs[attribute];
       if (!currentAttribute) {
         attrs[attribute] = [value];
