@@ -14,10 +14,10 @@ import { useQuery } from 'react-query';
 import ServiceApi from 'lib/service-api';
 import { useTranslation } from 'next-i18next';
 import { useBasket } from 'components/basket';
-import { Spinner } from 'ui/spinner'; 
+import { Spinner } from 'ui/spinner';
 
-import AddressSearch from './AddressSearch'
-import Delivery from './Delivery'
+import AddressSearch from './AddressSearch';
+import Delivery from './Delivery';
 
 import {
   Input,
@@ -82,12 +82,12 @@ export default function Payment() {
         streetName: '',
         suburb: '',
         territory: '',
-        postcode: '',
-      },
+        postcode: ''
+      }
     ]
   });
-  const [deliveryMethod, setDeliveryMethod] = useState(null)
-  const [isReadyForStripe, setIsReadyForStripe] = useState(false)
+  const [deliveryMethod, setDeliveryMethod] = useState(null);
+  const [isReadyForStripe, setIsReadyForStripe] = useState(false);
 
   useEffect(() => {
     // Check to see if this is a redirect back from Checkout
@@ -97,73 +97,75 @@ export default function Payment() {
     }
 
     if (query.get('canceled')) {
-      console.log('Order canceled -- continue to shop around and checkout when you’re ready.');
+      console.log(
+        'Order canceled -- continue to shop around and checkout when you’re ready.'
+      );
     }
   }, []);
 
   useEffect(() => {
-    let { cart } = basketModel
-    let currentDeliveryMethod = cart.filter(product => product.sku.startsWith("delivery"))
-    
+    let { cart } = basketModel;
+    let currentDeliveryMethod = cart.filter((product) =>
+      product.sku.startsWith('delivery')
+    );
+
     const removeAllDeliveryMethods = () => {
-      currentDeliveryMethod.map(product => {
+      currentDeliveryMethod.map((product) => {
         actions.removeItem({
           sku: product.sku,
-          path: "/deliveryfees/delivery",
-        })
-      })
-    }
+          path: '/deliveryfees/delivery'
+        });
+      });
+    };
 
     if (currentDeliveryMethod) {
-      removeAllDeliveryMethods()
+      removeAllDeliveryMethods();
     }
 
     if (deliveryMethod === 'collect') {
       actions.addItem({
-        sku: "delivery-pickup-from-shop",
-        path: "/deliveryfees/delivery",
+        sku: 'delivery-pickup-from-shop',
+        path: '/deliveryfees/delivery'
       });
-      return
+      return;
     }
 
-    if (deliveryMethod === "deliveryInTown") {
+    if (deliveryMethod === 'deliveryInTown') {
       actions.addItem({
-        sku: "delivery-in-town",
-        path: "/deliveryfees/delivery",
+        sku: 'delivery-in-town',
+        path: '/deliveryfees/delivery'
       });
-      return
+      return;
     }
 
-    if (deliveryMethod === "deliveryOutsideTown") {
+    if (deliveryMethod === 'deliveryOutsideTown') {
       actions.addItem({
-        sku: "delivery-outside-town",
-        path: "/deliveryfees/delivery",
+        sku: 'delivery-outside-town',
+        path: '/deliveryfees/delivery'
       });
-      return
+      return;
     }
-
-  }, [deliveryMethod])
+  }, [deliveryMethod, actions, basketModel]);
 
   const handleFormInput = (e) => {
-    const newCustomer = {...customer}
-    const form = e.target.closest("form")
-    const { value, name } = e.target
+    const newCustomer = { ...customer };
+    const form = e.target.closest('form');
+    const { value, name } = e.target;
 
-    if (e.target.id === "addressSearch") {
-      return
+    if (e.target.id === 'addressSearch') {
+      return;
     }
 
-    if (form.name === "customer") {
-      newCustomer[name] = value
-      setCustomer(newCustomer)
+    if (form.name === 'customer') {
+      newCustomer[name] = value;
+      setCustomer(newCustomer);
     }
 
-    if (form.name === "delivery") {
-      newCustomer.addresses[1][name] = value
-      setCustomer(newCustomer)
+    if (form.name === 'delivery') {
+      newCustomer.addresses[1][name] = value;
+      setCustomer(newCustomer);
     }
-
-  }
+  };
 
   const paymentConfig = useQuery('paymentConfig', () =>
     ServiceApi({
@@ -198,28 +200,40 @@ export default function Payment() {
   }
 
   const { firstName, lastName, email, phone, notes, deliveryDate } = customer;
-  const deliveryAddress = customer.addresses[1]
+  const deliveryAddress = customer.addresses[1];
 
-  const [error, setError] = useState("")
+  const [error, setError] = useState('');
 
   const handleStripeForm = () => {
-    const collectionFields = [firstName, lastName, email, phone]
-    const deliveryFields = [firstName, lastName, email, phone, deliveryAddress.email, deliveryAddress.phone, deliveryAddress.streetNumber, deliveryAddress.streetName, deliveryAddress.suburb, deliveryAddress.territory, deliveryAddress.postcode]
-    
-    if (deliveryMethod === "collect") {
-      if (collectionFields.filter(field => !field).length > 0) {
-        setError("Please fill in all fields before proceeding.")
-        return
+    const collectionFields = [firstName, lastName, email, phone];
+    const deliveryFields = [
+      firstName,
+      lastName,
+      email,
+      phone,
+      deliveryAddress.email,
+      deliveryAddress.phone,
+      deliveryAddress.streetNumber,
+      deliveryAddress.streetName,
+      deliveryAddress.suburb,
+      deliveryAddress.territory,
+      deliveryAddress.postcode
+    ];
+
+    if (deliveryMethod === 'collect') {
+      if (collectionFields.filter((field) => !field).length > 0) {
+        setError('Please fill in all fields before proceeding.');
+        return;
       }
-    } else if (deliveryMethod.startsWith("delivery")) {
-      if (deliveryFields.filter(field => !field).length > 0) {
-        setError("Please fill in all fields before proceeding.")
-        return
+    } else if (deliveryMethod.startsWith('delivery')) {
+      if (deliveryFields.filter((field) => !field).length > 0) {
+        setError('Please fill in all fields before proceeding.');
+        return;
       }
     }
-    
-    setIsReadyForStripe(true)
-  }
+
+    setIsReadyForStripe(true);
+  };
 
   function getURL(path) {
     return `${location.protocol}//${location.host}${multilingualUrlPrefix}${path}`;
@@ -230,7 +244,7 @@ export default function Payment() {
    * It contains everything needed to make a purchase and complete
    * an order
    */
-  const isDelivery = deliveryMethod?.startsWith("delivery")
+  const isDelivery = deliveryMethod?.startsWith('delivery');
   const checkoutModel = {
     basketModel,
     customer: {
@@ -244,7 +258,7 @@ export default function Payment() {
         {
           type: 'billing',
           email,
-          phone,
+          phone
         },
         {
           type: 'delivery',
@@ -252,16 +266,18 @@ export default function Payment() {
           phone: deliveryAddress.phone,
           unitNumber: deliveryAddress.unitNumber,
           streetNumber: deliveryAddress.streetNumber,
-          streetName: isDelivery ? deliveryAddress.streetName : "IN STORE PICKUP",
+          streetName: isDelivery
+            ? deliveryAddress.streetName
+            : 'IN STORE PICKUP',
           suburb: deliveryAddress.suburb,
           territory: deliveryAddress.territory,
-          postcode: deliveryAddress.postcode,
-        },
+          postcode: deliveryAddress.postcode
+        }
       ]
     },
     confirmationURL: getURL(`/confirmation/{crystallizeOrderId}?emptyBasket`),
     checkoutURL: getURL(`/checkout`),
-    termsURL: getURL(`/terms`),
+    termsURL: getURL(`/terms`)
   };
 
   const paymentProviders = [
@@ -380,7 +396,7 @@ export default function Payment() {
     <Inner>
       <CheckoutFormGroup>
         <SectionHeader>Billing Details</SectionHeader>
-        <form noValidate onChange={handleFormInput} name='customer'>
+        <form noValidate onChange={handleFormInput} name="customer">
           <Row>
             <InputGroup>
               <Label htmlFor="firstname">{t('customer:firstName')}</Label>
@@ -404,23 +420,13 @@ export default function Payment() {
           <Row>
             <InputGroup>
               <Label htmlFor="email">{t('customer:email')}</Label>
-              <Input
-                name="email"
-                type="email"
-                defaultValue={email}
-                required
-              />
+              <Input name="email" type="email" defaultValue={email} required />
             </InputGroup>
           </Row>
           <Row>
             <InputGroup>
               <Label htmlFor="phone">{t('customer:phone')}</Label>
-              <Input
-                name="phone"
-                type="number"
-                defaultValue={phone}
-                required
-              />
+              <Input name="phone" type="number" defaultValue={phone} required />
             </InputGroup>
           </Row>
           <Row>
@@ -438,15 +444,21 @@ export default function Payment() {
       </CheckoutFormGroup>
 
       <h1>
-        {('Delivery Options')}
-        <FootNote>We can deliver to Benalla, Wangaratta, Shepperton, Violet Town, Euroa & Mansfield.</FootNote>
-        <FootNote>If you are outside of these towns, give us a call for possible options.</FootNote>
+        {'Delivery Options'}
+        <FootNote>
+          We can deliver to Benalla, Wangaratta, Shepperton, Violet Town, Euroa
+          & Mansfield.
+        </FootNote>
+        <FootNote>
+          If you are outside of these towns, give us a call for possible
+          options.
+        </FootNote>
       </h1>
 
-      { deliveryMethod?.startsWith("delivery") &&
+      {deliveryMethod?.startsWith('delivery') && (
         <CheckoutFormGroup>
           <SectionHeader>Delivery Details</SectionHeader>
-          <form noValidate onChange={handleFormInput} name='delivery'>
+          <form noValidate onChange={handleFormInput} name="delivery">
             <Row>
               <InputGroup>
                 <Label htmlFor="firstname">recipient first name</Label>
@@ -489,86 +501,83 @@ export default function Payment() {
                 />
               </InputGroup>
             </Row>
-              <Row>
-                <InputGroup>
-                  <Label htmlFor="address">{t('customer:address')}</Label>
-                  <AddressSearch
-                    customer={customer}
-                    setCustomer={setCustomer}
-                  />
-                </InputGroup>
-              </Row>
-              <Row>
-                <InputGroup>
-                  <Label htmlFor="unitNumber">Unit Number</Label>
-                  <Input
-                    name="unitNumber"
-                    type='number'
-                    defaultValue={deliveryAddress.unitNumber}
-                  />
-                </InputGroup>
-                <InputGroup>
-                  <Label htmlFor="streetNumber">Street Number</Label>
-                  <Input
-                    name="streetNumber"
-                    type='text'
-                    defaultValue={deliveryAddress.streetNumber}
-                    required
-                  />
-                </InputGroup>
-              </Row>
-              <Row>
-                <InputGroup>
-                  <Label htmlFor="streetName">Street Name</Label>
-                  <Input
-                    name='streetName'
-                    defaultValue={deliveryAddress.streetName}
-                    type='text'
-                    required
-                  />
-                </InputGroup>
-                <InputGroup>
-                  <Label htmlFor="suburb">City/Town</Label>
-                  <Input
-                    name='suburb'
-                    defaultValue={deliveryAddress.suburb}
-                    type='text'
-                    required
-                  />
-                </InputGroup>
-              </Row>
-              <Row>
-                <InputGroup>
-                  <Label htmlFor="territory">State</Label>
-                  <Input
-                    name='territory'
-                    defaultValue={deliveryAddress.territory}
-                    type='text'
-                    required
-                  />
-                </InputGroup>
-                <InputGroup>
-                  <Label htmlFor="postcode">Postcode</Label>
-                  <Input
-                    name='postcode'
-                    defaultValue={deliveryAddress.postcode}
-                    type='number'
-                    required
-                  />
-                </InputGroup>
-              </Row>
+            <Row>
+              <InputGroup>
+                <Label htmlFor="address">{t('customer:address')}</Label>
+                <AddressSearch customer={customer} setCustomer={setCustomer} />
+              </InputGroup>
+            </Row>
+            <Row>
+              <InputGroup>
+                <Label htmlFor="unitNumber">Unit Number</Label>
+                <Input
+                  name="unitNumber"
+                  type="number"
+                  defaultValue={deliveryAddress.unitNumber}
+                />
+              </InputGroup>
+              <InputGroup>
+                <Label htmlFor="streetNumber">Street Number</Label>
+                <Input
+                  name="streetNumber"
+                  type="text"
+                  defaultValue={deliveryAddress.streetNumber}
+                  required
+                />
+              </InputGroup>
+            </Row>
+            <Row>
+              <InputGroup>
+                <Label htmlFor="streetName">Street Name</Label>
+                <Input
+                  name="streetName"
+                  defaultValue={deliveryAddress.streetName}
+                  type="text"
+                  required
+                />
+              </InputGroup>
+              <InputGroup>
+                <Label htmlFor="suburb">City/Town</Label>
+                <Input
+                  name="suburb"
+                  defaultValue={deliveryAddress.suburb}
+                  type="text"
+                  required
+                />
+              </InputGroup>
+            </Row>
+            <Row>
+              <InputGroup>
+                <Label htmlFor="territory">State</Label>
+                <Input
+                  name="territory"
+                  defaultValue={deliveryAddress.territory}
+                  type="text"
+                  required
+                />
+              </InputGroup>
+              <InputGroup>
+                <Label htmlFor="postcode">Postcode</Label>
+                <Input
+                  name="postcode"
+                  defaultValue={deliveryAddress.postcode}
+                  type="number"
+                  required
+                />
+              </InputGroup>
+            </Row>
           </form>
         </CheckoutFormGroup>
-      }
-        <CheckoutFormGroup>
-          <Delivery
+      )}
+      <CheckoutFormGroup>
+        <Delivery
           postcode={deliveryAddress.postcode}
           deliveryMethod={deliveryMethod}
           setDeliveryMethod={setDeliveryMethod}
           isReadyForStripe={isReadyForStripe}
           setCustomer={setCustomer}
-          />
-        </CheckoutFormGroup>
+        />
+      </CheckoutFormGroup>
 
       {/* <Voucher /> */}
       {/* <CheckoutFormGroup withUpperMargin>
@@ -632,32 +641,30 @@ export default function Payment() {
         </div>
       </CheckoutFormGroup> */}
 
-      {deliveryMethod && !isReadyForStripe &&
-      <CheckoutFormGroup>
-        <Button onClick={handleStripeForm} >Add credit card details</Button>
-        <ErrorMessage>{error}</ErrorMessage>
-      </CheckoutFormGroup>
-      }
-      
-      {isReadyForStripe && 
+      {deliveryMethod && !isReadyForStripe && (
+        <CheckoutFormGroup>
+          <Button onClick={handleStripeForm}>Add credit card details</Button>
+          <ErrorMessage>{error}</ErrorMessage>
+        </CheckoutFormGroup>
+      )}
+
+      {isReadyForStripe && (
         <PaymentProvider>
-          <SectionHeader>{('Payment Options')}</SectionHeader>
-            <StripeCheckout
-              checkoutModel={checkoutModel}
-              onSuccess={(crystallizeOrderId) => {
-                router.push(
-                  checkoutModel.confirmationURL.replace(
-                    '{crystallizeOrderId}',
-                    crystallizeOrderId
-                  )
-                );
-                scrollTo(0, 0);
-              }}
-            />
+          <SectionHeader>{'Payment Options'}</SectionHeader>
+          <StripeCheckout
+            checkoutModel={checkoutModel}
+            onSuccess={(crystallizeOrderId) => {
+              router.push(
+                checkoutModel.confirmationURL.replace(
+                  '{crystallizeOrderId}',
+                  crystallizeOrderId
+                )
+              );
+              scrollTo(0, 0);
+            }}
+          />
         </PaymentProvider>
-      }
-
-
+      )}
     </Inner>
   );
 }
