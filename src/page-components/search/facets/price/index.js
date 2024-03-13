@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Range } from 'rc-slider';
+import Range from 'rc-slider';
 import 'rc-slider/assets/index.css';
 
 import { useTranslation } from 'next-i18next';

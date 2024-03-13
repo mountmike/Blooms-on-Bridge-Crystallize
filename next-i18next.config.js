@@ -18,8 +18,7 @@ module.exports = {
   i18n: {
     // Match these locales with app.config.json
     defaultLocale: 'en',
-    locales: ["en"],
-    localePath: path.resolve('./public/static/locales')
+    locales: ['en']
   },
   serializeConfig: false,
   interpolation: {
