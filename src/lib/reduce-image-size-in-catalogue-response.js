@@ -3,7 +3,7 @@
  * response
  */
 
-import produce from 'immer';
+import { produce } from 'immer';
 
 function getImageWidthFromUrl({ url }) {
   try {

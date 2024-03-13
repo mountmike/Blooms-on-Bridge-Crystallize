@@ -1,7 +1,7 @@
 import React, { useReducer, useEffect, useRef } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-import produce from 'immer';
+import { produce } from 'immer';
 
 import { useTranslation } from 'next-i18next';
 import { simplyFetchFromSearchGraph } from 'lib/graph';

@@ -1,4 +1,4 @@
-import produce from 'immer';
+import { produce } from 'immer';
 
 export const initialVoucherState = {
   showForm: false,

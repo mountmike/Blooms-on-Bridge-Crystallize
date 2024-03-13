@@ -1,4 +1,4 @@
-import produce from 'immer';
+import { produce } from 'immer';
 
 export function cleanFilterForTotalAggregations(filter) {
   return produce(filter, (draft) => {

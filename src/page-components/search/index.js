@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/router';
-import produce from 'immer';
+import { produce } from 'immer';
 import styled from 'styled-components';
 import { Inner } from 'ui';
 
