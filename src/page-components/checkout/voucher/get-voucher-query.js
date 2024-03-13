@@ -1,5 +1,5 @@
-const getVoucherQuery = `
- query getVoucher($code: String!) {
+export default `
+  query getVoucher($code: String!) {
     voucher(code: $code) {
       isValid,
       voucher {
@@ -10,5 +10,3 @@ const getVoucherQuery = `
     }
   }
 `;
-
-export default getVoucherQuery;

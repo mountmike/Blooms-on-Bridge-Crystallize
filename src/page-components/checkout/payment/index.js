@@ -146,7 +146,7 @@ export default function Payment() {
       });
       return;
     }
-  }, [deliveryMethod, actions, basketModel]);
+  }, [deliveryMethod]);
 
   const handleFormInput = (e) => {
     const newCustomer = { ...customer };
