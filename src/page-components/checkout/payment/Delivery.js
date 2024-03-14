@@ -33,7 +33,7 @@ export default function Delivery({
   setCustomer
 }) {
   const [displayDeliveryChoice, setDisplayDeliveryChoice] = useState(true);
-  const [date, setDate] = useState();
+  const [targetDate, setTargetDate] = useState();
   const [publicHolidays, setPublicHolidays] = useState(null);
 
   useEffect(() => {
@@ -64,13 +64,16 @@ export default function Delivery({
   }, []);
 
   useEffect(() => {
-    const shortDate = date
-      ? format(date, 'dd MMM yyyy', { locale: enGB })
+    const shortDate = targetDate
+      ? format(targetDate, 'dd MMM yyyy', { locale: enGB })
       : 'none';
     setCustomer((customer) => {
-      return { ...customer, deliveryDate: date?.toLocaleDateString('en-GB') };
+      return {
+        ...customer,
+        deliveryDate: targetDate?.toLocaleDateString('en-GB')
+      };
     });
-  }, [date, setCustomer]);
+  }, [targetDate, setCustomer]);
 
   const calendarModifiers = {
     disabled: function (date) {
@@ -273,11 +276,13 @@ export default function Delivery({
                 </div>
               </div>
               <b> Request delivery/pickup date:</b>{' '}
-              {date ? format(date, 'dd MMM yyyy', { locale: enGB }) : 'none'}
+              {targetDate
+                ? format(targetDate, 'dd MMM yyyy', { locale: enGB })
+                : 'none'}
             </DateHeading>
             <DatePickerCalendar
-              date={date}
-              onDateChange={setDate}
+              date={targetDate}
+              onDateChange={setTargetDate}
               locale={enGB}
               modifiers={calendarModifiers}
               minimumDate={tomorrow}
