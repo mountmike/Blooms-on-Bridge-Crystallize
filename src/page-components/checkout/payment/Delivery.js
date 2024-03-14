@@ -277,12 +277,13 @@ export default function Delivery({
                   </span>
                 </div>
               </div>
-              <b> Request delivery/pickup date:</b> {/*{targetDate*/}
-              {/*  ? format(targetDate, 'dd MMM yyyy', { locale: enGB })*/}
-              {/*  : 'none'}*/}
+              <b> Request delivery/pickup date:</b>{' '}
+              {targetDate
+                ? format(targetDate, 'dd MMM yyyy', { locale: enGB })
+                : 'none'}
             </DateHeading>
             <DatePickerCalendar
-              date={targetDate}
+              date={new Date()}
               onDateChange={setTargetDate}
               locale={enGB}
               modifiers={calendarModifiers}
