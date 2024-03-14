@@ -283,12 +283,12 @@ export default function Delivery({
                 : 'none'}
             </DateHeading>
             <DatePickerCalendar
-              date={new Date()}
+              date={targetDate}
               onDateChange={setTargetDate}
               locale={enGB}
-              modifiers={calendarModifiers}
-              minimumDate={tomorrow}
-              maximumDate={maxDate}
+              // modifiers={calendarModifiers}
+              // minimumDate={tomorrow}
+              // maximumDate={maxDate}
               format="dd MMM yyyy"
             />
           </DateWrapper>
