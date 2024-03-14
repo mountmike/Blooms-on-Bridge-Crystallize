@@ -32,7 +32,9 @@ export default function Delivery({
   isReadyForStripe,
   setCustomer
 }) {
-  const [displayDeliveryChoice, setDisplayDeliveryChoice] = useState(true);
+  const [displayDeliveryChoice, setDisplayDeliveryChoice] = useState(
+    new Date()
+  );
   const [targetDate, setTargetDate] = useState();
   const [publicHolidays, setPublicHolidays] = useState(null);
 
