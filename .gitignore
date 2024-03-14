@@ -34,4 +34,4 @@ jspm_packages/
 .next
 
 # environment variable
-.env
+.env*
