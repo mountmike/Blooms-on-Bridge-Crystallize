@@ -4,7 +4,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFacebook, faInstagram } from '@fortawesome/free-brands-svg-icons';
 import styles from './footer.module.css';
 
-import LogoCrystallize from 'ui/icons/logo-crystallize';
 import { useTranslation } from 'next-i18next';
 
 import { useSettings } from 'components/settings-context';
@@ -18,7 +17,7 @@ export default function Footer() {
   return (
     <Outer>
       <Logo>
-        <Link href="/">
+        <Link href="/" passHref>
           <img src="/static/logo.png" alt="Blooms on bridge logo" />
         </Link>
         <Socials>

@@ -66,9 +66,6 @@ export default function Delivery({
   }, []);
 
   useEffect(() => {
-    const shortDate = targetDate
-      ? format(targetDate, 'dd MMM yyyy', { locale: enGB })
-      : 'none';
     setCustomer((customer) => {
       return {
         ...customer,
@@ -107,18 +104,17 @@ export default function Delivery({
   };
 
   const isInTown = () => {
-    return postcode == '3672' ? true : false;
+    return postcode === '3672';
   };
 
   const isOutsideTown = () => {
-    return listOfDeliveryPostcodes.includes(postcode) ? true : false;
+    return listOfDeliveryPostcodes.includes(postcode);
   };
 
   const Row = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 15px;
     background: white;
     font-size: 1rem;
     font-weight: 500;
@@ -183,7 +179,7 @@ export default function Delivery({
         <Wrapper onChange={handleDeliverySelection}>
           {!isInTown() &&
             !isOutsideTown() &&
-            deliveryMethod != 'collect' &&
+            deliveryMethod !== 'collect' &&
             postcode && (
               <div>
                 <ErrorMessage>
@@ -232,7 +228,7 @@ export default function Delivery({
                 id="deliveryInTown"
                 name="deliverySelection"
                 value="deliveryInTown"
-                checked={deliveryMethod == 'deliveryInTown'}
+                checked={deliveryMethod === 'deliveryInTown'}
                 readOnly
                 disabled={isReadyForStripe}
               />
@@ -258,7 +254,7 @@ export default function Delivery({
                 id="deliveryOutsideTown"
                 name="deliverySelection"
                 value="deliveryOutsideTown"
-                checked={deliveryMethod == 'deliveryOutsideTown'}
+                checked={deliveryMethod === 'deliveryOutsideTown'}
                 readOnly
                 disabled={isReadyForStripe}
               />
@@ -271,7 +267,7 @@ export default function Delivery({
                 <FontAwesomeIcon icon={faCircleInfo} width={15} height={15} />
                 <div className={styles.tooltipText}>
                   <span>
-                    We try out best but cannot always guarantee exact delivery
+                    We try our best but cannot always guarantee exact delivery
                     dates. If we can&apos;t make the requested date, delivery
                     will be made the following business day.
                   </span>
@@ -286,9 +282,9 @@ export default function Delivery({
               date={targetDate}
               onDateChange={setTargetDate}
               locale={enGB}
-              // modifiers={calendarModifiers}
-              // minimumDate={tomorrow}
-              // maximumDate={maxDate}
+              modifiers={calendarModifiers}
+              minimumDate={tomorrow}
+              maximumDate={maxDate}
               format="dd MMM yyyy"
             />
           </DateWrapper>
