@@ -1,4 +1,4 @@
-export default `
+const getVoucherQuery = `
   query getVoucher($code: String!) {
     voucher(code: $code) {
       isValid,
@@ -10,3 +10,5 @@ export default `
     }
   }
 `;
+
+export default getVoucherQuery;

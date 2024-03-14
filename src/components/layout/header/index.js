@@ -38,7 +38,7 @@ export default function Header({ simple, preview }) {
         </PreviewBar>
       )}
       <Outer simple={simple}>
-        <Link href="/" passHref>
+        <Link href="/" passHref legacyBehavior>
           <Logo aria-label="Logo">
             <img src="/static/logo_textonly.png" alt="" width="150" />
           </Logo>
@@ -47,7 +47,7 @@ export default function Header({ simple, preview }) {
           <NavList>
             {mainNavigation?.map((category) => (
               <NavListItem key={category.path}>
-                <Link href={category.path}>
+                <Link href={category.path} legacyBehavior>
                   <a onClick={() => setNavOpen(false)}>{category.name}</a>
                 </Link>
               </NavListItem>
@@ -56,7 +56,7 @@ export default function Header({ simple, preview }) {
         </Nav>
         <IconBar>
           <LocaleSwitcher navOpen={navOpen} />
-          <Link href="/account" passHref>
+          <Link href="/account" passHref legacyBehavior>
             <Btn as="a" aria-label="User area">
               <IconUser />
             </Btn>

@@ -1,41 +1,35 @@
 /* eslint-disable react/display-name */
 import { loadStripe } from '@stripe/stripe-js';
-
-const stripePromise = loadStripe(
-  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
-);
-
-import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
-import dynamic from 'next/dynamic';
-
-import styled from 'styled-components';
-import { useQuery } from 'react-query';
+import { useBasket } from 'components/basket';
 
 import ServiceApi from 'lib/service-api';
 import { useTranslation } from 'next-i18next';
-import { useBasket } from 'components/basket';
-import { Spinner } from 'ui/spinner';
+import dynamic from 'next/dynamic';
+import { useRouter } from 'next/router';
+import React, { useEffect, useState } from 'react';
+import { useQuery } from 'react-query';
+
+import styled from 'styled-components';
+import { Button } from 'ui';
+
+import {
+  CheckoutFormGroup,
+  ErrorMessage,
+  FootNote,
+  Input,
+  InputGroup,
+  Label,
+  PaymentProvider,
+  SectionHeader,
+  TextArea
+} from '../styles';
 
 import AddressSearch from './AddressSearch';
 import Delivery from './Delivery';
 
-import {
-  Input,
-  InputGroup,
-  Label,
-  PaymentSelector,
-  PaymentProviders,
-  PaymentButton,
-  PaymentProvider,
-  SectionHeader,
-  CheckoutFormGroup,
-  ErrorMessage,
-  FootNote,
-  TextArea
-} from '../styles';
-import { Button } from 'ui';
-import Voucher from '../voucher';
+const stripePromise = loadStripe(
+  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
+);
 
 const StripeCheckout = dynamic(() => import('./stripe'));
 const KlarnaCheckout = dynamic(() => import('./klarna'));
@@ -146,7 +140,7 @@ export default function Payment() {
       });
       return;
     }
-  }, [deliveryMethod]);
+  }, [deliveryMethod, actions, basketModel]);
 
   const handleFormInput = (e) => {
     const newCustomer = { ...customer };

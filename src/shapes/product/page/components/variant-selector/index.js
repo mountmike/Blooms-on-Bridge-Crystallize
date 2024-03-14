@@ -46,7 +46,7 @@ function VariantAttributeValue({ value, images = [] }) {
     <div>
       {image && (
         <VariantImage>
-          <Image {...image} sizes="100px" />
+          <Image {...image} sizes="100px" alt={'variant image'} />
         </VariantImage>
       )}
       {value}

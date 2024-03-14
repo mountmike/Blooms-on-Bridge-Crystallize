@@ -161,13 +161,13 @@ export default function Search() {
             <Result>
               <h3>{searchResult.totalCount} suggestions</h3>
               <ul style={{ height: 40 * (searchResult.edges.length + 1) }}>
-                {searchResult.edges.map(({ cursor, node }) => (
+                {searchResult.edges?.map(({ cursor, node }) => (
                   <li key={cursor}>
                     <Link
                       href={node.path}
                       onClick={() => dispatch({ action: 'blue' })}
                     >
-                      <a>{node.name}</a>
+                      {node.name}
                     </Link>
                   </li>
                 ))}

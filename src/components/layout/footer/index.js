@@ -1,9 +1,8 @@
 import React from 'react';
 import Link from 'next/link';
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faFacebook, faInstagram } from "@fortawesome/free-brands-svg-icons"
-import styles from './footer.module.css'
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faFacebook, faInstagram } from '@fortawesome/free-brands-svg-icons';
+import styles from './footer.module.css';
 
 import LogoCrystallize from 'ui/icons/logo-crystallize';
 import { useTranslation } from 'next-i18next';
@@ -20,17 +19,25 @@ export default function Footer() {
     <Outer>
       <Logo>
         <Link href="/">
-          <a aria-label="Logo">
-            <img src="/static/logo.png" alt="Blooms on bridge logo"  />
-          </a>
+          <img src="/static/logo.png" alt="Blooms on bridge logo" />
         </Link>
         <Socials>
-            <a className={styles.externalLink} href="https://www.facebook.com/bloomsonbridge" target='_blank' rel="noopener noreferrer">
-              <FontAwesomeIcon icon={faFacebook} />
-            </a>
-            <a className={styles.externalLink} href="https://www.instagram.com/bloomsonbridge/" target='_blank' rel="noopener noreferrer">
-              <FontAwesomeIcon icon={faInstagram}  />
-            </a>
+          <a
+            className={styles.externalLink}
+            href="https://www.facebook.com/bloomsonbridge"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <FontAwesomeIcon icon={faFacebook} />
+          </a>
+          <a
+            className={styles.externalLink}
+            href="https://www.instagram.com/bloomsonbridge/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <FontAwesomeIcon icon={faInstagram} />
+          </a>
         </Socials>
       </Logo>
 
@@ -38,9 +45,7 @@ export default function Footer() {
         <h5>{t('menu')}</h5>
         {mainNavigation?.map((category) => (
           <li key={category.path}>
-            <Link href={category.path}>
-              <a>{category.name}</a>
-            </Link>
+            <Link href={category.path}>{category.name}</Link>
           </li>
         ))}
       </NavList>

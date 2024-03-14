@@ -20,6 +20,7 @@ module.exports = {
     defaultLocale: 'en',
     locales: ['en']
   },
+  localePath: path.resolve('./public/static/locales'),
   serializeConfig: false,
   interpolation: {
     escapeValue: false, // react already safe from xss
